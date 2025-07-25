@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Resume Analyzer MVP</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="upload-view">
+      <h1>Instant Resume Analyzer</h1>
+      <p>Upload your PDF and pick an industry to get a score & rewrite suggestions.</p>
+
+      <div id="dropzone" class="dropzone">
+        <input id="fileInput" type="file" accept="application/pdf" hidden />
+        <p>Drag & drop PDF here or <button id="browseBtn" type="button">Browse</button></p>
+      </div>
+
+      <label for="industrySelect">Target industry</label>
+      <select id="industrySelect">
+        <option value="Finance">Finance</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Marketing">Marketing</option>
+      </select>
+
+      <button id="analyzeBtn" disabled>Analyze</button>
+      <div id="spinner" class="hidden spinner"></div>
+    </section>
+
+    <section id="results-view" class="hidden">
+      <div id="scoresPanel"></div>
+      <div class="pane-container">
+        <div class="pane">
+          <h3>Original</h3>
+          <canvas id="pdfOriginal"></canvas>
+        </div>
+        <div class="pane">
+          <h3>Improved Draft</h3>
+          <div id="improvedText" class="improved-box"></div>
+        </div>
+      </div>
+
+      <div id="detailsTabs"></div>
+
+      <button id="downloadBtn">Download Improved Version</button>
+      <button id="deepRewriteBtn" class="paid">Deep Rewrite (DOCX)</button>
+    </section>
+  </main>
+
+  <!-- Option A: local vendor build -->
+  <!-- <script src="vendor/pdfjs/pdf.js"></script>
+  <script src="pdfviewer.js"></script>
+  <script src="main.js"></script> -->
+
+  <!-- Option B: CDN (uncomment if you prefer) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.worker.js";
+  </script>
+  <script src="pdfviewer.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

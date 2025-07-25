@@ -1,0 +1,12 @@
+You are a professional résumé coach specialized in {industry}.
+Evaluate the following {section_name} text.
+
+Return ONLY valid JSON with keys:
+  "section" (string)
+  "score" (0-100 integer)
+  "strengths" (array of 3 concise strings)
+  "improvements" (array of 3 concise strings)
+  "rewrittenBullets" (array of up to 3 improved bullets; keep facts, add metrics if missing)
+
+Text:
+"""{section_text}"""

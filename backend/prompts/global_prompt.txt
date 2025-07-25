@@ -1,0 +1,6 @@
+Given the JSON for all sections below, provide a short paragraph (<=120 words) of global layout/formatting fixes (font consistency, ordering, spacing).
+
+Return ONLY plain text, no JSON.
+
+JSON:
+{all_sections_json}

@@ -1,0 +1,44 @@
+{
+  "overall": {
+    "industry": "Finance",
+    "score": 82,
+    "summary": "Strong quantitative bullets but lacks clear impact metrics in early roles.",
+    "globalRecommendations": "Use reverse chronological order and standardize fonts."
+  },
+  "sections": [
+    {
+      "section": "Experience",
+      "score": 78,
+      "strengths": [
+        "Action verbs",
+        "Relevant tools",
+        "Some metrics"
+      ],
+      "improvements": [
+        "Add ROI numbers",
+        "Clarify scope",
+        "Shorten bullets"
+      ],
+      "rewrittenBullets": [
+        "Increased monthly P&L forecast accuracy by 12% by building a SQL-based variance tracker.",
+        "Automated weekly reporting for 5 departments, saving ~6 hours of manual work per week."
+      ]
+    },
+    {
+      "section": "Skills",
+      "score": 70,
+      "strengths": [
+        "Covers key tools",
+        "Concise"
+      ],
+      "improvements": [
+        "Group by category",
+        "Prioritize industry tools",
+        "Trim generic skills"
+      ],
+      "rewrittenBullets": [
+        "Financial Modeling (Excel, SQL), Forecasting, Tableau, Python (Pandas)"
+      ]
+    }
+  ]
+}

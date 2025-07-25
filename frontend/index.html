@@ -14,6 +14,11 @@
       <div id="dropzone" class="dropzone">
         <input id="fileInput" type="file" accept="application/pdf" hidden />
         <p>Drag & drop PDF here or <button id="browseBtn" type="button">Browse</button></p>
+
+        <div id="selectedFileDisplay" class="hidden">
+          <span id="selectedFileName"></span>
+          <button id="removeFileBtn" type="button" title="Remove file">✕</button>
+        </div>
       </div>
 
       <label for="industrySelect">Target industry</label>

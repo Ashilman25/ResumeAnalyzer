@@ -42,15 +42,10 @@ analyzeBtn.onclick = async () => {
       method: 'POST',
       body: formData
     });
-    if (!res.ok) {
-      const err = await res.json();
-      alert(err.detail || "Error analyzing resume. Try again.");
-      return; // Stop if error
-    }
     const data = await res.json();
     renderResults(data, selectedFile);
   } catch (err) {
-    alert("Error analyzing resume. Try again.");
+    alert("Error analyzing Resume. Try again.");
     console.error(err);
   } finally {
     spinner.classList.add('hidden');

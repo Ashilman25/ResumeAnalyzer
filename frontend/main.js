@@ -7,15 +7,45 @@ const uploadView = document.getElementById('upload-view');
 const resultsView = document.getElementById('results-view');
 const improvedBox = document.getElementById('improvedText');
 
+const selectedFileDisplay = document.getElementById('selectedFileDisplay');
+const selectedFileName    = document.getElementById('selectedFileName');
+const removeFileBtn       = document.getElementById('removeFileBtn');
+
 let selectedFile = null;
 
-browseBtn.onclick = () => fileInput.click();
-
-fileInput.onchange = (e) => {
-  selectedFile = e.target.files[0];
-  analyzeBtn.disabled = !selectedFile;
+browseBtn.onclick = () => {
+  if (!selectedFile) fileInput.click();
 };
 
+function showSelected(file) {
+  selectedFile = file;
+  analyzeBtn.disabled = !selectedFile;
+  selectedFileName.textContent = file.name;
+  selectedFileDisplay.classList.remove('hidden');
+  browseBtn.disabled = true;               // grey out
+  fileInput.disabled = true;               // disable file input
+  dropzone.classList.add('disabled');      // visually gray out dropzone
+}
+
+function clearSelected() {
+  selectedFile = null;
+  fileInput.value = "";
+  analyzeBtn.disabled = true;
+  selectedFileName.textContent = "";                // clear name
+  selectedFileDisplay.classList.add('hidden');      // hide name + X
+  browseBtn.disabled = false;
+  fileInput.disabled = false;
+  dropzone.classList.remove('disabled');
+}
+
+removeFileBtn.onclick = clearSelected;
+
+fileInput.onchange = (e) => {
+  if (!e.target.files.length) return;
+  showSelected(e.target.files[0]);
+};
+
+// Drag & drop logic
 dropzone.addEventListener('dragover', e => {
   e.preventDefault();
   dropzone.classList.add('dragover');
@@ -24,8 +54,13 @@ dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover
 dropzone.addEventListener('drop', e => {
   e.preventDefault();
   dropzone.classList.remove('dragover');
-  selectedFile = e.dataTransfer.files[0];
-  analyzeBtn.disabled = !selectedFile;
+  if (selectedFile) return; // already have one, ignore
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') {
+    showSelected(file);
+  } else {
+    alert("Please drop a single PDF.");
+  }
 });
 
 analyzeBtn.onclick = async () => {

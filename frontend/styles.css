@@ -21,6 +21,11 @@ h1,h2,h3 {
     background: #eff6ff; 
 }
 
+.dropzone.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .spinner { 
     width: 32px; 
     height:32px; 
@@ -74,4 +79,41 @@ h1,h2,h3 {
 .improved-box mark.green { 
     background: #dcfce7;
 }
+
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
+
+#selectedFileDisplay {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+#selectedFileDisplay.hidden {
+  display: none;
+}
+
+#removeFileBtn {
+  background: none;
+  border: none;
+  color: #f87171;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.3rem;
+}
+
+.pdf-scroll {
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.pdf-scroll canvas {
+    display: block;
+    margin-bottom: 12px;
+    width: 100%;
+    height: auto;
+}

@@ -89,6 +89,32 @@ analyzeBtn.onclick = async () => {
   }
 };
 
+/* build a score badge once and return as HTML                        */
+function makeScoreLabel(score, size = 120, extraClass = '') {
+  return `
+    <div class="score-label ${extraClass}" data-score="${score}">
+      <svg viewBox="0 0 100 100">
+        <circle class="circle-bg"       cx="50" cy="50" r="45"></circle>
+        <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+      </svg>
+      <div class="score-text">${score}</div>
+    </div>`;
+}
+
+/* initialise every .score-label that’s now in the DOM                */
+function initScoreLabels() {
+  document.querySelectorAll('.score-label').forEach(label => {
+    const score      = +label.dataset.score || 0;
+    const circle     = label.querySelector('.circle-progress');
+    const radius     = circle.r.baseVal.value;
+    const circumference = 2 * Math.PI * radius;
+
+    circle.style.strokeDasharray  = circumference;
+    circle.style.strokeDashoffset = circumference * (1 - score / 100);
+    label.querySelector('.score-text').textContent = score;
+  });
+}
+
 // Basic PDF.js setup
 async function renderResults(data, originalFile) {
   /* view swap */
@@ -102,7 +128,7 @@ async function renderResults(data, originalFile) {
     <p>${data.overall.summary}</p>
   `;
 
-  /* build card‑style containers for each section */
+  /* ---------- SECTION CARDS ---------- */
   improvedBox.innerHTML = "";              // clear old content
 
 (data.sections || []).forEach(s => {
@@ -111,13 +137,11 @@ async function renderResults(data, originalFile) {
 
   // ---------- assemble inner HTML ----------
   box.innerHTML = `
-    <!-- title + score -->
-    <div class="section">
-      <h1 class="main-title">
-        ${s.section}
-        <span style="font-size:.9rem; font-weight:400;">&nbsp;(score ${s.score})</span>
-      </h1>
-    </div>
+      <!-- header row: title + badge -->
+      <div class="section header-with-score">
+        <h1 class="main-title">${s.section}</h1>
+        ${makeScoreLabel(s.score, 80, 'small')}
+      </div>  
 
     <!-- strengths -->
     <div class="section">
@@ -161,6 +185,9 @@ async function renderResults(data, originalFile) {
       .join('\n\n');
     downloadImproved(plain);
   };
+
+
+  initScoreLabels(); 
 }
 
 function loadTestEnvironment() {

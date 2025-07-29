@@ -1,5 +1,5 @@
 const TESTING_MODE = false; // Set to false to return to normal mode
-const SAMPLE_PDF_PATH = './sample_resume.pdf'; // Place a PDF in your frontend folder
+const SAMPLE_PDF_PATH = './sample_resume.pdf'; 
 
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
@@ -115,6 +115,30 @@ function initScoreLabels() {
   });
 }
 
+function wireCollapsibles() {
+  document.querySelectorAll('.info-container').forEach(container => {
+    const header  = container.querySelector('.section-header');
+    const content = container.querySelector('.section-content');
+    const toggle  = container.querySelector('.toggle-btn');
+
+    const setExpanded = (exp) => {
+      content.classList.toggle('expanded', exp);
+      toggle.classList.toggle('expanded', exp);
+      toggle.setAttribute('aria-expanded', exp);
+      header.setAttribute ('aria-expanded', exp);
+      content.setAttribute('aria-hidden' , !exp);
+      container.setAttribute('data-expanded', exp);
+    };
+
+    // default collapsed unless the server marks it open
+    setExpanded(container.getAttribute('data-expanded') === 'true');
+
+    header.addEventListener('click',  e => { if (e.target!==toggle) setExpanded(!content.classList.contains('expanded')); });
+    toggle.addEventListener('click',  e => { e.stopPropagation(); setExpanded(!content.classList.contains('expanded')); });
+    header.addEventListener('keydown',e => { if ([' ','Enter'].includes(e.key)) { e.preventDefault(); setExpanded(!content.classList.contains('expanded')); }});
+  });
+}
+
 // Basic PDF.js setup
 async function renderResults(data, originalFile) {
   /* view swap */
@@ -137,32 +161,44 @@ async function renderResults(data, originalFile) {
 
   // ---------- assemble inner HTML ----------
   box.innerHTML = `
-      <!-- header row: title + badge -->
-      <div class="section header-with-score">
-        <h1 class="main-title">${s.section}</h1>
-        ${makeScoreLabel(s.score, 80, 'small')}
-      </div>  
+  <!-- ====== COLLAPSIBLE HEADER ====== -->
+  <div class="section-header"
+       tabindex="0" aria-expanded="false"
+       role="button" aria-controls="sec-${s.section}-content">
 
-    <!-- strengths -->
-    <div class="section">
-      <h2 class="section-title">Strengths</h2>
-      <ul>${(s.strengths||[]).map(str => `<li>${str}</li>`).join("")}</ul>
+    <h1 class="main-title">${s.section}</h1>
+
+    ${makeScoreLabel(s.score, 60, 'small')}
+
+    <button class="toggle-btn"
+            aria-label="Expand ${s.section} section"
+            aria-controls="sec-${s.section}-content"
+            aria-expanded="false">&#94;</button>
+  </div>
+
+  <!-- ====== COLLAPSIBLE BODY ====== -->
+  <div class="section-content"
+       id="sec-${s.section}-content"
+       aria-hidden="true">
+
+    <div class="section-subsection">
+      <h2>Strengths</h2>
+      <ul>${(s.strengths||[]).map(str => `<li>${str}</li>`).join('')}</ul>
       <div class="separator"></div>
     </div>
 
-    <!-- improvements -->
-    <div class="section">
-      <h2 class="section-title">Improvements</h2>
-      <ul>${(s.improvements||[]).map(im => `<li>${im}</li>`).join("")}</ul>
-      ${s.rewrittenBullets?.length ? '<div class="separator"></div>' : ''}
+    <div class="section-subsection">
+      <h2>Improvements</h2>
+      <ul>${(s.improvements||[]).map(im => `<li>${im}</li>`).join('')}</ul>
+      ${(s.rewrittenBullets?.length) ? '<div class="separator"></div>' : ''}
     </div>
 
-    ${s.rewrittenBullets?.length ? `
-      <!-- suggested bullets -->
-      <div class="section">
-        <h2 class="section-title">Suggested Bullets</h2>
-        <ul>${s.rewrittenBullets.map(b => `<li>${b}</li>`).join("")}</ul>
-      </div>` : ""}
+    ${(s.rewrittenBullets?.length) ? `
+      <div class="section-subsection">
+        <h2>Suggested Bullets</h2>
+        <ul>${s.rewrittenBullets.map(b => `<li>${b}</li>`).join('')}</ul>
+      </div>` : ''}
+  </div>
   `;
   // -----------------------------------------
 
@@ -188,6 +224,7 @@ async function renderResults(data, originalFile) {
 
 
   initScoreLabels(); 
+  wireCollapsibles(); 
 }
 
 function loadTestEnvironment() {

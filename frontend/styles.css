@@ -1,269 +1,276 @@
-/* ========== Global layout & typography ========== */
-body {
-  font-family: system-ui, sans-serif;
-  margin: 0;
-  padding: 0 1rem;
+body{
+  font-family:system-ui, sans-serif;
+  margin:0;
+  padding:0 1rem;
+}
+h1,h2,h3{margin:.5rem 0;}
+
+/* ---------- Upload zone ---------- */
+.dropzone{
+  border:2px dashed #888;
+  padding:2rem;
+  text-align:center;
+  margin:1rem 0;
+  cursor:pointer;
+}
+.dropzone.dragover{
+  border-color:#3b82f6;
+  background:#eff6ff;
+}
+.dropzone.disabled{
+  opacity:.5;
+  pointer-events:none;
 }
 
-h1, h2, h3 {
-  margin: 0.5rem 0;
+/* ---------- Spinner ---------- */
+.spinner{
+  width:32px;height:32px;
+  border:4px solid #ccc;
+  border-top-color:#3b82f6;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin-top:1rem;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ---------- Helpers ---------- */
+.hidden{display:none;}
+
+/* ---------- Two‑pane layout ---------- */
+.pane-container{
+  display:flex;
+  gap:1rem;
+  flex-wrap:wrap;
+}
+.pane{
+  flex:1 1 400px;
+  min-width:300px;
+  display:flex;
+  flex-direction:column;
+}
+.pane h3{margin-bottom:.5rem;}
+
+/* ---------- Buttons ---------- */
+.paid{
+  background:#3b82f6;
+  color:#fff;
+  border:none;
+  padding:.6rem 1rem;
+  margin-top:1rem;
+  cursor:pointer;
+  border-radius:6px;
+}
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
 }
 
-/* ========== Upload zone ========== */
-.dropzone {
-  border: 2px dashed #888;
-  padding: 2rem;
-  text-align: center;
-  margin: 1rem 0;
-  cursor: pointer;
-}
-.dropzone.dragover {
-  border-color: #3b82f6;
-  background: #eff6ff;
-}
-.dropzone.disabled {
-  opacity: 0.5;
-  pointer-events: none;
+/* ---------- Improved‑draft column ---------- */
+#improvedText{
+  max-height:80vh;
+  overflow:auto;
+  white-space:pre-wrap;
+  border:none;
+  padding:0;
+  margin:0;
+  box-sizing:border-box;
 }
 
-/* ========== Spinner ========== */
-.spinner {
-  width: 32px;
-  height: 32px;
-  border: 4px solid #ccc;
-  border-top-color: #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-top: 1rem;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* Optional colour‑coded highlights */
+.improved-box mark.red    {background:#fecaca;}
+.improved-box mark.yellow {background:#fef9c3;}
+.improved-box mark.green  {background:#dcfce7;}
 
-.hidden { display: none; }
-
-/* ========== Two‑pane layout ========== */
-.pane-container {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+/* ---------- Selected‑file pill ---------- */
+#selectedFileDisplay{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  margin-top:.5rem;
 }
-.pane {
-  flex: 1 1 400px;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-}
-.pane h3 { margin-bottom: 0.5rem; }
-
-/* ========== Buttons ========== */
-.paid {
-  background: #3b82f6;
-  color: #fff;
-  border: none;
-  padding: 0.6rem 1rem;
-  margin-top: 1rem;
-  cursor: pointer;
-  border-radius: 6px;
-}
-button:disabled {
-  opacity: .45;
-  cursor: not-allowed;
+#selectedFileDisplay.hidden{display:none;}
+#removeFileBtn{
+  background:none;
+  border:none;
+  color:#f87171;
+  font-size:1.2rem;
+  cursor:pointer;
+  padding:0 .3rem;
 }
 
-/* ========== Improved‑draft column ========== */
-#improvedText {
-  max-height: 80vh;
-  overflow: auto;
-  white-space: pre-wrap;
-  border: none;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+/* ---------- PDF viewer ---------- */
+.pdf-scroll{
+  max-height:80vh;
+  overflow:auto;
+}
+.pdf-scroll canvas{
+  display:block;
+  margin-bottom:12px;
+  width:100%;
+  height:auto;
+}
+#pdfOriginal{border:1px solid #ddd;}
+
+/* =========================================================
+   Results info boxes (section cards)
+   ========================================================= */
+
+.info-container{
+  width:100%;
+  max-width:600px;
+  margin:0 0 1rem 0;           /* vertical gap between boxes */
+  background:#fafafa;
+  border-radius:12px;
+  box-shadow:0 4px 8px rgba(0,0,0,.06);
+  color:#333;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Optional colour‐coded highlights */
-.improved-box mark.red    { background: #fecaca; }
-.improved-box mark.yellow { background: #fef9c3; }
-.improved-box mark.green  { background: #dcfce7; }
+/* Inner generic spacing */
+.info-container .section{padding:1rem 0;}
 
-/* ========== Selected‑file pill ========== */
-#selectedFileDisplay {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-#selectedFileDisplay.hidden { display: none; }
-#removeFileBtn {
-  background: none;
-  border: none;
-  color: #f87171;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 0 0.3rem;
+/* Main title text */
+.info-container .main-title{
+  font-size:1.8rem;
+  font-weight:700;
+  margin:0;
+  padding:0;
+  flex:1;
 }
 
-/* ========== PDF viewer ========== */
-.pdf-scroll {
-  max-height: 80vh;
-  overflow: auto;
-}
-.pdf-scroll canvas {
-  display: block;
-  margin-bottom: 12px;
-  width: 100%;
-  height: auto;
-}
-#pdfOriginal { border: 1px solid #ddd; }
-
-/* ========== Results info boxes ========== */
-
-.info-container {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 0 1rem 0;                /* vertical gap between boxes */
-  background-color:rgb(250,250,250);
-  border-radius: 12px;
-  box-shadow:12px 4px 8px 0px rgba(0,0,0,0.06);
-  padding: 1.5rem 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-}
-
-/* Section wrapper inside each box */
-.info-container .section { padding: 1rem 0; }
-
-/* Main title (section name + score) */
-.info-container .main-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0; /* Remove all margins */
-  padding: 0; /* Remove padding */
-  flex: 1; /* Let it take available space */
-}
-
-/* Sub‑section headers (Strengths, Improvements…) */
-.info-container .section-title {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  padding-bottom: 0.25rem;
+/* Sub‑section headers */
+.info-container .section-title{
+  font-size:1.4rem;
+  font-weight:600;
+  margin:0 0 .5rem 0;
+  padding-bottom:.25rem;
 }
 
 /* Divider between sub‑sections */
-.info-container .separator {
-  border-top: 1.5px solid #ccc;
-  margin-top: 1rem;
+.info-container .separator{
+  border-top:1.5px solid #ccc;
+  margin-top:1rem;
 }
 
 /* Bulleted lists */
-.info-container ul {
-  margin: 0;
-  padding-left: 1.25rem;
-}
-.info-container ul li {
-  margin-bottom: 0.4rem;
-  line-height: 1.4;
-}
+.info-container ul{margin:0;padding-left:1.25rem;}
+.info-container ul li{margin-bottom:.4rem;line-height:1.4;}
 
 /* Responsive tweaks */
-@media (max-width: 480px) {
-  .info-container { padding: 1rem 1rem; }
-  .info-container .main-title   { font-size: 1.5rem; }
-  .info-container .section-title{ font-size: 1.2rem; }
+@media (max-width:480px){
+  .info-container{padding:1rem;}
+  .info-container .main-title  {font-size:1.5rem;}
+  .info-container .section-title{font-size:1.2rem;}
 }
 
-/* ========== Improved‑draft text ========== */
-#improvedText, #improvedText * { white-space: normal; }
+/* =========================================================
+   Circular score badge
+   ========================================================= */
 
-.info-container{
-  width:90%;
-  margin:2rem auto;
-  box-shadow:0 4px 8px rgba(0,0,0,.1);
+.score-label{
+  position:relative;
+  width:120px;height:120px;
+  margin:0 auto;
+}
+.score-label.small{
+  width:60px;height:60px;
+  margin:0;
+}
+.score-label.small .score-text{font-size:1.2rem;}
+
+.score-label svg{
+  width:100%;height:100%;
+  display:block;
+  transform:rotate(90deg);
+  transform-origin:50% 50%;
+}
+.circle-bg{
+  fill:none;
+  stroke:#eee;
+  stroke-width:10;
+}
+.circle-progress{
+  fill:none;
+  stroke:#007bff;
+  stroke-width:10;
+  stroke-linecap:round;
+  transition:stroke-dashoffset .8s ease-out;
+}
+.score-text{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font:700 2rem/1 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color:#007bff;
 }
 
-.info-container .separator:last-child{display:none}
+/* =========================================================
+   Collapsible header, toggle arrow & body
+   ========================================================= */
 
-.info-container h1,
-.info-container h2{margin-top:0}
+/* Header row */
+.section-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1rem 1.5rem;
+  cursor:pointer;
+  user-select:none;
+  background:#fff;
+  border-bottom:1.5px solid #ccc;
+}
+.section-header .main-title{flex:1;margin:0;font-size:1.6rem;font-weight:700;}
 
+/* Arrow button */
+.toggle-btn{
+  font-size:1.6rem;
+  background:none;
+  border:none;
+  color:#007bff;
+  width:32px;height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform .3s ease;
+}
+.toggle-btn.expanded{transform:rotate(180deg);}
 
-
-
-/* ========== Circular Score Badge ========== */
-.score-label {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
+/* Collapsible body */
+.section-content{
+  overflow:hidden;
+  max-height:0;
+  padding:0 1.5rem;
+  background:#fafafa;
+  transition:max-height .4s ease,padding .3s ease;
+}
+.section-content.expanded{
+  max-height:2000px;           /* large enough to show full content */
+  padding-top:1rem;
+  padding-bottom:1.5rem;
 }
 
-.score-label.small {
-  width: 60px; /* Smaller from 80px */
-  height: 60px;
-  margin: 0; /* Remove auto margins */
+/* =========================================================
+   Legacy helpers kept for compatibility
+   ========================================================= */
+
+/* Align header title & score when you *don’t* need collapsible */
+.header-with-score{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  width:100%;
+  position:relative;
+  padding-bottom:1.2rem;
+  margin-bottom:.5rem;
+}
+.header-with-score::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;
+  height:2px;width:100%;
+  background:#007bff;
 }
 
-.score-label.small .score-text {
-  font-size: 1.2rem; /* Smaller font */
-}
-
-.score-label svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  transform: rotate(90deg);
-  transform-origin: 50% 50%;
-}
-
-.circle-bg {
-  fill: none;
-  stroke: #eee;
-  stroke-width: 10;
-}
-
-.circle-progress {
-  fill: none;
-  stroke: #007bff;
-  stroke-width: 10;
-  stroke-linecap: round;
-  transition: stroke-dashoffset .8s ease-out;
-}
-
-.score-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font: 700 2rem/1 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #007bff;
-}
-
-/* helpers to line badge + text */
-.overall-score-wrap {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.header-with-score {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Pushes title to left, score to right */
-  gap: 1rem;
-  width: 100%;
-  position: relative; /* Add this */
-  padding-bottom: 1.2rem; /* Add space for the line below */
-  margin-bottom: 0.5rem;
-}
-
-/* Fix the line positioning */
-.header-with-score::after {
-  content: '';
-  position: absolute; /* Position absolutely */
-  bottom: 0; /* Place at bottom of container */
-  left: 0; /* Start from left edge */
-  height: 2px;
-  background: #007bff; /* Same color as score circle */
-  width: 100%;
-}
-
+/* Ensure improved text wraps normally inside cards */
+#improvedText,#improvedText *{white-space:normal;}

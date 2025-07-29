@@ -1,29 +1,52 @@
 import re
-
 HEADERS = [
-    ("Experience", r"(experience|work history|professional experience)"),
-    ("Education", r"(education|academic background)"),
-    ("Skills", r"(skills|technical skills|core competencies)"),
-    ("Projects", r"(projects|selected projects)"),
-    ("Summary", r"(summary|objective|profile)"),
+    ("Summary",            r"(summary|objective|profile|professional summary|career objective)"),
+    ("Key Achievements",   r"(key achievements|accomplishments|highlights)"),
+    ("Experience",         r"(experience|work history|professional experience|employment( history)?|work experience)"),
+    ("Database Experience",r"(database experience|dba experience)"),
+    ("Education",          r"(education|eduction|academic background|degrees|qualifications)"),
+    ("Skills",             r"(skills|technical skills|core competencies|expertise|proficiencies)"),
+    ("Projects",           r"(projects|selected projects|personal projects|professional projects)"),
+    ("Certifications",     r"(certifications|certificates|licenses|accreditations)"),
+    ("Languages",          r"(languages|language proficiency|spoken languages)"),
+    ("Publications",       r"(publications|research|papers|articles)"),
+    ("Volunteer",          r"(volunteer|community service|community involvement)"),
+    ("Awards",             r"(awards|honors|achievements|recognitions)"),
+    ("References",         r"(references|recommendations?)"),
+    ("Activities",         r"(activities|extracurricular|interests|hobbies)")
 ]
 
 def split_sections(full_text: str):
-    lines = full_text.splitlines()
-    indexes = []
-    for i, line in enumerate(lines):
-        lowered = line.strip().lower()
-        for name, pat in HEADERS:
-            if re.search(rf"\b{pat}\b", lowered):
-                indexes.append((i, name))
-    indexes.sort(key=lambda x: x[0])
+    text = full_text.replace("\r", "")
 
+    group_map = {}
+    patterns = []
+    for i, (label, pat) in enumerate(HEADERS):
+        gname = f"h{i}"               # safe name
+        group_map[gname] = label
+        patterns.append(rf"^(?P<{gname}>{pat})\s*:?\s*$")
+
+    big_re = re.compile("|".join(patterns), re.IGNORECASE | re.MULTILINE)
+
+    matches = []
+    for m in big_re.finditer(text):
+        label = group_map.get(m.lastgroup)
+        if label:
+            matches.append((m.start(), label))
+
+    if not matches:
+        return [{"name": "FullResume", "text": text.strip()}]
+
+    matches.sort()
     sections = []
-    for idx, (line_no, name) in enumerate(indexes):
-        start = line_no
-        end = indexes[idx+1][0] if idx+1 < len(indexes) else len(lines)
-        section_text = "\n".join(lines[start:end]).strip()
-        sections.append({"name": name, "text": section_text})
-    if not sections:
-        sections = [{"name":"General","text":full_text}]
-    return sections
+    for i, (start, label) in enumerate(matches):
+        end = matches[i+1][0] if i+1 < len(matches) else len(text)
+        chunk = text[start:end].strip()
+        sections.append({"name": label, "text": chunk})
+
+    # keep longest per label
+    dedup = {}
+    for s in sections:
+        if s["name"] not in dedup or len(s["text"]) > len(dedup[s["name"]]["text"]):
+            dedup[s["name"]] = s
+    return list(dedup.values())

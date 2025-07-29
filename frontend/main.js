@@ -73,12 +73,10 @@ analyzeBtn.onclick = async () => {
   formData.append('targetIndustry', industry);
 
   try {
-    const res = await fetch('http://localhost:8000/analyze', {
-      method: 'POST',
-      body: formData
-    });
+    const res = await fetch('http://localhost:8000/analyze', { method: 'POST', body: formData });
+    if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
-    renderResults(data, selectedFile);
+    await renderResults(data, selectedFile);
   } catch (err) {
     alert("Error analyzing Resume. Try again.");
     console.error(err);
@@ -88,32 +86,41 @@ analyzeBtn.onclick = async () => {
   }
 };
 
-function renderResults(data, originalFile) {
+// make it async
+async function renderResults(data, originalFile) {
   uploadView.classList.add('hidden');
   resultsView.classList.remove('hidden');
 
-  // Scores
   const scoresPanel = document.getElementById('scoresPanel');
   scoresPanel.innerHTML = `
     <h2>Overall Score: ${data.overall.score}</h2>
     <p>${data.overall.summary}</p>
   `;
 
-  // Render Original PDF
-  renderPDF(URL.createObjectURL(originalFile), 'pdfOriginal');
-
-  // Improved draft text (simple join of rewritten bullets per section)
+  // Build improved text FIRST so even if PDF fails, you still see it
   const improvedText = data.sections.map(s => {
-    const bullets = s.rewrittenBullets.map(b => '• ' + b).join('\n');
-    return `## ${s.section} (score: ${s.score})\nStrengths: ${s.strengths.join('; ')}\nImprovements: ${s.improvements.join('; ')}\n\n${bullets}\n`;
+    const bullets = (s.rewrittenBullets || []).map(b => '• ' + b).join('\n');
+    return `## ${s.section} (score: ${s.score})
+Strengths: ${s.strengths.join('; ')}
+Improvements: ${s.improvements.join('; ')}
+
+${bullets}\n`;
   }).join('\n\n');
 
   improvedBox.textContent = improvedText;
 
-  // Tabs or accordion could go here (TODO)
-  // Download button
+  // Render PDF safely
+  try {
+    const blobUrl = URL.createObjectURL(originalFile);
+    await renderPDF(blobUrl, 'pdfOriginal');
+    URL.revokeObjectURL(blobUrl);
+  } catch (e) {
+    console.error("PDF render failed", e);
+  }
+
   document.getElementById('downloadBtn').onclick = () => downloadImproved(improvedText);
 }
+
 
 function downloadImproved(text) {
   const blob = new Blob([text], { type: 'text/plain' });

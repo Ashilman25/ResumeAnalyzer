@@ -29,9 +29,11 @@ async def analyze_resume(pdf: UploadFile = File(...),
         raise HTTPException(status_code=422, detail="Could not extract text.")
 
     sections = section_splitter.split_sections(text)
-
+    print(f"Detected {len(sections)} sections: {[s['name'] for s in sections]}")
+    
     section_results = []
     for s in sections:
+        print(f"Analyzing section: {s['name']} ({len(s['text'])} characters)")
         section_json = ai_client.score_section(s["name"], s["text"], targetIndustry)
         section_results.append(section_json)
 

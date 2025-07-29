@@ -49,6 +49,8 @@ h1,h2,h3 {
 .pane{ 
     flex:1 1 400px; 
     min-width:300px; 
+    display: flex;
+    flex-direction: column;
 }
 .paid { 
     background:#3b82f6; 
@@ -60,12 +62,14 @@ h1,h2,h3 {
     border-radius:6px; 
 }
 
-#improvedText { 
-    white-space: pre-wrap; 
-    border:1px solid #ddd; 
-    padding:1rem; 
-    min-height:600px; 
-    overflow:auto; 
+#improvedText {
+  max-height: 80vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin: 0; 
+  box-sizing: border-box; 
 }
 
 .improved-box mark.red { 
@@ -116,4 +120,13 @@ button:disabled {
     margin-bottom: 12px;
     width: 100%;
     height: auto;
+}
+
+
+#pdfOriginal {
+  border: 1px solid #ddd;
+}
+
+.pane h3 {
+  margin-bottom: 0.5rem;
 }

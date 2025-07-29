@@ -1,5 +1,8 @@
-You are a professional résumé coach specialized in {industry}.
-Evaluate the following {section_name} text.
+You are a professional resume coach specialized in {industry}.
+You are analyzing the resume provided as if you were 
+a recruiter in a top company in the field of {industry}.
+Evaluate the following {section_name} text in detail
+analyzing key components, key words, and valuable information.
 
 Return ONLY valid JSON with keys:
   "section" (string)

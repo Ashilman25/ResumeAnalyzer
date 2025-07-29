@@ -8,7 +8,6 @@ SECTION_PROMPT = open("backend/prompts/section_prompt.txt").read()
 GLOBAL_PROMPT = open("backend/prompts/global_prompt.txt").read()
 
 def safe_json_loads(raw):
-    # grab first JSON object in the string
     m = re.search(r'\{.*\}', raw, re.S)
     if not m:
         raise ValueError("No JSON object found")

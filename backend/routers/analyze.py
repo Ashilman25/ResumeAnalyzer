@@ -24,7 +24,7 @@ async def analyze_resume(pdf: UploadFile = File(...),
     from backend.services.pdf_extract import extract_pdf_text
 
     text = extract_pdf_text(temp_path)
-    print(f"Extracted text: {repr(text)}")  # Add this line for debugging
+    print(f"Extracted text: {repr(text)}") # Debugging output
     if not text or len(text.strip()) < 50:
         raise HTTPException(status_code=422, detail="Could not extract text.")
 

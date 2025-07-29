@@ -13,7 +13,7 @@ HEADERS = [
     ("Volunteer",          r"(volunteer|community service|community involvement)"),
     ("Awards",             r"(awards|honors|achievements|recognitions)"),
     ("References",         r"(references|recommendations?)"),
-    ("Activities",         r"(activities|extracurricular|interests|hobbies)")
+    ("Activities",         r"(activities|extracurricular|extracurricular activities|interests|hobbies)")
 ]
 
 def split_sections(full_text: str):
@@ -44,7 +44,7 @@ def split_sections(full_text: str):
         chunk = text[start:end].strip()
         sections.append({"name": label, "text": chunk})
 
-    # keep longest per label
+
     dedup = {}
     for s in sections:
         if s["name"] not in dedup or len(s["text"]) > len(dedup[s["name"]]["text"]):

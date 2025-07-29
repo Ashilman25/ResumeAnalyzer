@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Resume Analyzer MVP</title>
+  <title>Resume Analyzer</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -22,8 +22,8 @@
 
       <label for="industrySelect">Target industry</label>
       <select id="industrySelect">
-        <option value="Finance">Finance</option>
         <option value="Computer Science">Computer Science</option>
+        <option value="Finance">Finance</option>
         <option value="Marketing">Marketing</option>
       </select>
 
@@ -51,12 +51,10 @@
     </section>
   </main>
 
-  <!-- Option A: local vendor build -->
   <!-- <script src="vendor/pdfjs/pdf.js"></script>
   <script src="pdfviewer.js"></script>
   <script src="main.js"></script> -->
 
-  <!-- Option B: CDN (uncomment if you prefer) -->
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.js"></script>
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.worker.js";

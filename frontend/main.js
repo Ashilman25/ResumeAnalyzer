@@ -8,8 +8,8 @@ const resultsView = document.getElementById('results-view');
 const improvedBox = document.getElementById('improvedText');
 
 const selectedFileDisplay = document.getElementById('selectedFileDisplay');
-const selectedFileName    = document.getElementById('selectedFileName');
-const removeFileBtn       = document.getElementById('removeFileBtn');
+const selectedFileName = document.getElementById('selectedFileName');
+const removeFileBtn = document.getElementById('removeFileBtn');
 
 let selectedFile = null;
 
@@ -86,7 +86,7 @@ analyzeBtn.onclick = async () => {
   }
 };
 
-// make it async
+// Basic PDF.js setup
 async function renderResults(data, originalFile) {
   uploadView.classList.add('hidden');
   resultsView.classList.remove('hidden');
@@ -101,10 +101,11 @@ async function renderResults(data, originalFile) {
   const improvedText = data.sections.map(s => {
     const bullets = (s.rewrittenBullets || []).map(b => '• ' + b).join('\n');
     return `## ${s.section} (score: ${s.score})
-Strengths: ${s.strengths.join('; ')}
-Improvements: ${s.improvements.join('; ')}
 
-${bullets}\n`;
+  Strengths: ${s.strengths.join('; ')}
+  Improvements: ${s.improvements.join('; ')}
+
+  ${bullets}\n`;
   }).join('\n\n');
 
   improvedBox.textContent = improvedText;

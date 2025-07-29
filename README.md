@@ -1,6 +1,6 @@
 # Resume AI MVP
 
-A minimal, end-to-end prototype: upload a PDF résumé, score each section with AI, and show an improved draft side-by-side.
+A minimal, end-to-end prototype: upload a PDF resume, score each section with AI, and show an improved draft side-by-side.
 
 ## Quick Start
 

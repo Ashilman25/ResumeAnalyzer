@@ -1,106 +1,98 @@
-body { 
-    font-family: system-ui, sans-serif; 
-    margin: 0; 
-    padding: 0 1rem; 
+/* ========== Global layout & typography ========== */
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0 1rem;
 }
 
-h1,h2,h3 { 
-    margin: 0.5rem 0; 
+h1, h2, h3 {
+  margin: 0.5rem 0;
 }
 
-.dropzone { 
-    border: 2px dashed #888; 
-    padding: 2rem; 
-    text-align: center; 
-    margin: 1rem 0; 
-    cursor:pointer; 
+/* ========== Upload zone ========== */
+.dropzone {
+  border: 2px dashed #888;
+  padding: 2rem;
+  text-align: center;
+  margin: 1rem 0;
+  cursor: pointer;
 }
-
-.dropzone.dragover { 
-    border-color: #3b82f6; 
-    background: #eff6ff; 
+.dropzone.dragover {
+  border-color: #3b82f6;
+  background: #eff6ff;
 }
-
 .dropzone.disabled {
   opacity: 0.5;
   pointer-events: none;
 }
 
-.spinner { 
-    width: 32px; 
-    height:32px; 
-    border: 4px solid #ccc; 
-    border-top-color:#3b82f6; 
-    border-radius:50%; 
-    animation: spin 1s linear infinite; 
-    margin-top:1rem;
+/* ========== Spinner ========== */
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 4px solid #ccc;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-top: 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.hidden { display: none; }
+
+/* ========== Two‑pane layout ========== */
+.pane-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.pane {
+  flex: 1 1 400px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+.pane h3 { margin-bottom: 0.5rem; }
+
+/* ========== Buttons ========== */
+.paid {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+}
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
 }
 
-.hidden { 
-    display:none; 
-}
-
-.pane-container { 
-    display:flex; 
-    gap:1rem; 
-    flex-wrap:wrap; 
-}
-
-.pane{ 
-    flex:1 1 400px; 
-    min-width:300px; 
-    display: flex;
-    flex-direction: column;
-}
-.paid { 
-    background:#3b82f6; 
-    color:white; 
-    border:none; 
-    padding:0.6rem 1rem; 
-    margin-top:1rem; 
-    cursor:pointer; 
-    border-radius:6px; 
-}
-
+/* ========== Improved‑draft column ========== */
 #improvedText {
   max-height: 80vh;
   overflow: auto;
   white-space: pre-wrap;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  margin: 0; 
-  box-sizing: border-box; 
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.improved-box mark.red { 
-    background: #fecaca; 
-}
+/* Optional colour‐coded highlights */
+.improved-box mark.red    { background: #fecaca; }
+.improved-box mark.yellow { background: #fef9c3; }
+.improved-box mark.green  { background: #dcfce7; }
 
-.improved-box mark.yellow { 
-    background: #fef9c3; 
-}
-
-.improved-box mark.green { 
-    background: #dcfce7;
-}
-
-button:disabled {
-    opacity: .45;
-    cursor: not-allowed;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
+/* ========== Selected‑file pill ========== */
 #selectedFileDisplay {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
-
-#selectedFileDisplay.hidden {
-  display: none;
-}
-
+#selectedFileDisplay.hidden { display: none; }
 #removeFileBtn {
   background: none;
   border: none;
@@ -110,23 +102,102 @@ button:disabled {
   padding: 0 0.3rem;
 }
 
+/* ========== PDF viewer ========== */
 .pdf-scroll {
-    max-height: 80vh;
-    overflow: auto;
+  max-height: 80vh;
+  overflow: auto;
 }
-
 .pdf-scroll canvas {
-    display: block;
-    margin-bottom: 12px;
-    width: 100%;
-    height: auto;
+  display: block;
+  margin-bottom: 12px;
+  width: 100%;
+  height: auto;
+}
+#pdfOriginal { border: 1px solid #ddd; }
+
+/* ========== Results info boxes ========== */
+
+.info-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 0 1rem 0;                /* vertical gap between boxes */
+  background-color:rgb(250,250,250);
+  border-radius: 12px;
+  box-shadow:12px 4px 8px 0px rgba(0,0,0,0.06);
+  padding: 1.5rem 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
+/* Section wrapper inside each box */
+.info-container .section { padding: 1rem 0; }
 
-#pdfOriginal {
-  border: 1px solid #ddd;
+/* Main title (section name + score) */
+.info-container .main-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.25rem;
+  position: relative;
+}
+.info-container .main-title::after {
+  content: '';
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: #007bff;
+  border-radius: 1px;
+  margin-top: 0.25rem;
 }
 
-.pane h3 {
-  margin-bottom: 0.5rem;
+/* Sub‑section headers (Strengths, Improvements…) */
+.info-container .section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.25rem;
 }
+
+/* Divider between sub‑sections */
+.info-container .separator {
+  border-top: 1.5px solid #ccc;
+  margin-top: 1rem;
+}
+
+/* Bulleted lists */
+.info-container ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.info-container ul li {
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .info-container { padding: 1rem 1rem; }
+  .info-container .main-title   { font-size: 1.5rem; }
+  .info-container .section-title{ font-size: 1.2rem; }
+}
+
+/* ========================================================= */
+/*  Old .sec‑card / .sec‑list styles removed — everything    */
+/*  now renders with .info-container.                        */
+/* ========================================================= */
+
+/* override only inside the results column */
+#improvedText, #improvedText * { white-space: normal; }
+
+.info-container{
+  width:90%;
+  margin:2rem auto;
+  box-shadow:0 4px 8px rgba(0,0,0,.1);
+}
+
+/* hide the trailing separator the builder adds */
+.info-container .separator:last-child{display:none}
+
+/* if you keep the global heading reset, zero out the top margin again */
+.info-container h1,
+.info-container h2{margin-top:0}

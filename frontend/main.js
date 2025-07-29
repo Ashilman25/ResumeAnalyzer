@@ -1,3 +1,6 @@
+const TESTING_MODE = false; // Set to false to return to normal mode
+const SAMPLE_PDF_PATH = './sample_resume.pdf'; // Place a PDF in your frontend folder
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const browseBtn = document.getElementById('browseBtn');
@@ -88,47 +91,169 @@ analyzeBtn.onclick = async () => {
 
 // Basic PDF.js setup
 async function renderResults(data, originalFile) {
+  /* view swap */
   uploadView.classList.add('hidden');
   resultsView.classList.remove('hidden');
 
+  /* overall score block */
   const scoresPanel = document.getElementById('scoresPanel');
   scoresPanel.innerHTML = `
     <h2>Overall Score: ${data.overall.score}</h2>
     <p>${data.overall.summary}</p>
   `;
 
-  // Build improved text FIRST so even if PDF fails, you still see it
-  const improvedText = data.sections.map(s => {
-    const bullets = (s.rewrittenBullets || []).map(b => '• ' + b).join('\n');
-    return `## ${s.section} (score: ${s.score})
+  /* build card‑style containers for each section */
+  improvedBox.innerHTML = "";              // clear old content
 
-  Strengths: ${s.strengths.join('; ')}
-  Improvements: ${s.improvements.join('; ')}
+(data.sections || []).forEach(s => {
+  const box = document.createElement("div");
+  box.className = "info-container";
 
-  ${bullets}\n`;
-  }).join('\n\n');
+  // ---------- assemble inner HTML ----------
+  box.innerHTML = `
+    <!-- title + score -->
+    <div class="section">
+      <h1 class="main-title">
+        ${s.section}
+        <span style="font-size:.9rem; font-weight:400;">&nbsp;(score ${s.score})</span>
+      </h1>
+    </div>
 
-  improvedBox.textContent = improvedText;
+    <!-- strengths -->
+    <div class="section">
+      <h2 class="section-title">Strengths</h2>
+      <ul>${(s.strengths||[]).map(str => `<li>${str}</li>`).join("")}</ul>
+      <div class="separator"></div>
+    </div>
 
-  // Render PDF safely
+    <!-- improvements -->
+    <div class="section">
+      <h2 class="section-title">Improvements</h2>
+      <ul>${(s.improvements||[]).map(im => `<li>${im}</li>`).join("")}</ul>
+      ${s.rewrittenBullets?.length ? '<div class="separator"></div>' : ''}
+    </div>
+
+    ${s.rewrittenBullets?.length ? `
+      <!-- suggested bullets -->
+      <div class="section">
+        <h2 class="section-title">Suggested Bullets</h2>
+        <ul>${s.rewrittenBullets.map(b => `<li>${b}</li>`).join("")}</ul>
+      </div>` : ""}
+  `;
+  // -----------------------------------------
+
+  improvedBox.appendChild(box);
+});
+
+  /* render original PDF; don’t break UI if it fails */
   try {
     const blobUrl = URL.createObjectURL(originalFile);
     await renderPDF(blobUrl, 'pdfOriginal');
     URL.revokeObjectURL(blobUrl);
-  } catch (e) {
-    console.error("PDF render failed", e);
+  } catch (err) {
+    console.error('PDF render failed', err);
   }
 
-  document.getElementById('downloadBtn').onclick = () => downloadImproved(improvedText);
+  /* download handler – flattens cards to plain text */
+  document.getElementById('downloadBtn').onclick = () => {
+    const plain = [...improvedBox.querySelectorAll('.sec-card')]
+      .map(card => card.innerText.trim())
+      .join('\n\n');
+    downloadImproved(plain);
+  };
 }
 
-
-function downloadImproved(text) {
-  const blob = new Blob([text], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'Improved_Resume_v1.txt';
-  a.click();
-  URL.revokeObjectURL(url);
+function loadTestEnvironment() {
+  if (!TESTING_MODE) return;
+  
+  // Hide upload view, show results view
+  document.getElementById('upload-view').classList.add('hidden');
+  document.getElementById('results-view').classList.remove('hidden');
+  
+  // Option 1: Use fetch to get the PDF as a blob
+  fetch(SAMPLE_PDF_PATH)
+    .then(response => response.blob())
+    .then(blob => {
+      // Create a File object from the blob
+      const sampleFile = new File([blob], "sample_resume.pdf", { type: "application/pdf" });
+      
+      // Use the blob URL for rendering
+      const blobUrl = URL.createObjectURL(sampleFile);
+      renderPDF(blobUrl, 'pdfOriginal');
+      
+      // Sample analysis response
+      const sampleResponse = {
+        "overall": {
+          "score": 75,
+          "summary": "This is a strong resume that highlights relevant experience...",
+          "improvements": "Consider quantifying achievements more consistently..."
+        },
+        "sections": [
+          {
+            "name": "Summary",
+            "score": 70,
+            "strengths": ["Clear professional identity", "Highlights key expertise"],
+            "improvements": ["Add a specific achievement", "Mention target role"],
+            "section": "Summary", // Make sure this matches your renderResults expectations
+            "rewrittenBullets": ["Sample bullet point 1", "Sample bullet point 2"]
+          },
+          {
+            "name": "Experience",
+            "score": 85,
+            "section": "Experience", // Make sure this matches your renderResults expectations
+            "strengths": ["Strong action verbs", "Quantified results"],
+            "improvements": ["Add more metrics", "Focus on most relevant achievements"],
+            "rewrittenBullets": ["Sample bullet point 1", "Sample bullet point 2"]
+          }
+        ]
+      };
+      
+      // Process the sample response with the file
+      renderResults(sampleResponse, sampleFile);
+    })
+    .catch(err => {
+      console.error("Error loading test PDF:", err);
+      // Fallback to just showing the results without PDF
+      const sampleResponse = {
+        "overall": {
+          "score": 75,
+          "summary": "This is a strong resume that highlights relevant experience...",
+          "improvements": "Consider quantifying achievements more consistently..."
+        },
+        "sections": [
+          {
+            "name": "Summary",
+            "score": 70,
+            "strengths": ["Clear professional identity", "Highlights key expertise"],
+            "improvements": ["Add a specific achievement", "Mention target role"],
+            "section": "Summary", // Make sure this matches your renderResults expectations
+            "rewrittenBullets": ["Sample bullet point 1", "Sample bullet point 2"]
+          },
+          {
+            "name": "Experience",
+            "score": 85,
+            "section": "Experience", // Make sure this matches your renderResults expectations
+            "strengths": ["Strong action verbs", "Quantified results"],
+            "improvements": ["Add more metrics", "Focus on most relevant achievements"],
+            "rewrittenBullets": ["Sample bullet point 1", "Sample bullet point 2"]
+          }
+        ]
+      };
+      renderResults(sampleResponse, null);
+    });
 }
+
+// Call this at the end of your window.onload or main code
+if (TESTING_MODE) {
+  loadTestEnvironment();
+}
+
+// function downloadImproved(text) {
+//   const blob = new Blob([text], { type: 'text/plain' });
+//   const url = URL.createObjectURL(blob);
+//   const a = document.createElement('a');
+//   a.href = url;
+//   a.download = 'Improved_Resume_v1.txt';
+//   a.click();
+//   URL.revokeObjectURL(url);
+// }

@@ -5,7 +5,7 @@
 async function renderPDF(url, containerId) {
   const pdf = await pdfjsLib.getDocument(url).promise;
   const container = document.getElementById(containerId);
-  container.innerHTML = ""; // clear old canvases
+  container.innerHTML = ""; 
 
   for (let p = 1; p <= pdf.numPages; p++) {
     const page = await pdf.getPage(p);

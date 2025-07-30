@@ -1,4 +1,4 @@
-const TESTING_MODE = false; // Set to false to return to normal mode
+const TESTING_MODE = false; 
 const SAMPLE_PDF_PATH = './sample_resume.pdf'; 
 
 const fileInput = document.getElementById('fileInput');
@@ -104,12 +104,12 @@ function makeScoreLabel(score, size = 120, extraClass = '') {
 /* initialise every .score-label that’s now in the DOM                */
 function initScoreLabels() {
   document.querySelectorAll('.score-label').forEach(label => {
-    const score      = +label.dataset.score || 0;
-    const circle     = label.querySelector('.circle-progress');
-    const radius     = circle.r.baseVal.value;
+    const score = +label.dataset.score || 0;
+    const circle = label.querySelector('.circle-progress');
+    const radius = circle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
 
-    circle.style.strokeDasharray  = circumference;
+    circle.style.strokeDasharray = circumference;
     circle.style.strokeDashoffset = circumference * (1 - score / 100);
     label.querySelector('.score-text').textContent = score;
   });
@@ -205,7 +205,6 @@ async function renderResults(data, originalFile) {
   improvedBox.appendChild(box);
 });
 
-  /* render original PDF; don’t break UI if it fails */
   try {
     const blobUrl = URL.createObjectURL(originalFile);
     await renderPDF(blobUrl, 'pdfOriginal');
@@ -214,7 +213,6 @@ async function renderResults(data, originalFile) {
     console.error('PDF render failed', err);
   }
 
-  /* download handler – flattens cards to plain text */
   document.getElementById('downloadBtn').onclick = () => {
     const plain = [...improvedBox.querySelectorAll('.sec-card')]
       .map(card => card.innerText.trim())
@@ -230,22 +228,20 @@ async function renderResults(data, originalFile) {
 function loadTestEnvironment() {
   if (!TESTING_MODE) return;
   
-  // Hide upload view, show results view
+
   document.getElementById('upload-view').classList.add('hidden');
   document.getElementById('results-view').classList.remove('hidden');
   
-  // Option 1: Use fetch to get the PDF as a blob
   fetch(SAMPLE_PDF_PATH)
     .then(response => response.blob())
     .then(blob => {
-      // Create a File object from the blob
+
       const sampleFile = new File([blob], "sample_resume.pdf", { type: "application/pdf" });
-      
-      // Use the blob URL for rendering
+  
       const blobUrl = URL.createObjectURL(sampleFile);
       renderPDF(blobUrl, 'pdfOriginal');
       
-      // Sample analysis response
+  
       const sampleResponse = {
         "overall": {
           "score": 75,

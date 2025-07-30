@@ -3,36 +3,64 @@
 <head>
   <meta charset="utf-8" />
   <title>Resume Analyzer</title>
+
+  <!-- Google Font for the hero -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main id="app">
-    <section id="upload-view">
-      <h1>Instant Resume Analyzer</h1>
-      <p>Upload your PDF and pick an industry to get a score & rewrite suggestions.</p>
 
-      <div id="dropzone" class="dropzone">
-        <input id="fileInput" type="file" accept="application/pdf" hidden />
-        <p>Drag & drop PDF here or <button id="browseBtn" type="button">Browse</button></p>
-      </div>
-      <div id="selectedFileDisplay" class="hidden">
-        <span id="selectedFileName"></span>
-        <button id="removeFileBtn" type="button" title="Remove file">✕</button>
+    <!-- ░░░ UPLOAD HERO ░░░ -->
+    <section id="upload-view" class="hero">
+
+      <!-- decorative floating blobs -->
+      <div class="hero-bg">
+        <span class="blob b1"></span>
+        <span class="blob b2"></span>
+        <span class="blob b3"></span>
       </div>
 
-      <label for="industrySelect">Target industry</label>
-      <select id="industrySelect">
-        <option value="Computer Science">Computer Science</option>
-        <option value="Finance">Finance</option>
-        <option value="Marketing">Marketing</option>
-      </select>
+      <!-- glassy upload card -->
+      <div class="upload-card glass" role="region" aria-labelledby="hero-heading">
 
-      <button id="analyzeBtn" disabled>Analyze</button>
-      <div id="spinner" class="hidden spinner"></div>
+        <h1 id="hero-heading">Instant Resume Analyzer</h1>
+        <p class="tagline">
+          Upload your PDF and pick an industry - get a tailored score &amp; rewrite tips in seconds.
+        </p>
+
+        <!-- DROPZONE -->
+        <div id="dropzone" class="dropzone" aria-label="PDF drop zone">
+          <input id="fileInput" type="file" accept="application/pdf" hidden />
+          <p>Drag &amp; drop PDF here or
+             <button id="browseBtn" type="button" class="text-btn">Browse</button>
+          </p>
+        </div>
+
+        <!-- chosen-file pill -->
+        <div id="selectedFileDisplay" class="selected hidden" aria-live="polite">
+          <span id="selectedFileName"></span>
+          <button id="removeFileBtn" type="button" title="Remove file">✕</button>
+        </div>
+
+        <!-- Industry picker -->
+        <label for="industrySelect" class="picker-label">Target industry</label>
+        <select id="industrySelect" class="picker">
+          <option value="Computer Science">Computer Science</option>
+          <option value="Finance">Finance</option>
+          <option value="Marketing">Marketing</option>
+        </select>
+
+        <!-- action -->
+        <button id="analyzeBtn" class="btn-primary" disabled>Analyze</button>
+        <div id="spinner" class="hidden spinner"></div>
+      </div>
     </section>
 
+    <!-- ░░░ RESULTS (UNCHANGED) ░░░ -->
     <section id="results-view" class="hidden">
       <div id="scoresPanel"></div>
+
       <div class="pane-container">
         <div class="pane">
           <h3>Original</h3>
@@ -47,17 +75,15 @@
       <div id="detailsTabs"></div>
 
       <button id="downloadBtn">Download Improved Version</button>
-      <button id="deepRewriteBtn" class="paid">Deep Rewrite (DOCX)</button>
+      <button id="deepRewriteBtn" class="paid">Deep Rewrite&nbsp;(DOCX)</button>
     </section>
   </main>
 
-  <!-- <script src="vendor/pdfjs/pdf.js"></script>
-  <script src="pdfviewer.js"></script>
-  <script src="main.js"></script> -->
-
+  <!-- PDF.js + app scripts (unchanged) -->
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.js"></script>
   <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.worker.js";
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.worker.js";
   </script>
   <script src="pdfviewer.js"></script>
   <script src="main.js"></script>

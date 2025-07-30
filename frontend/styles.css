@@ -1,58 +1,171 @@
-body{
-  font-family:system-ui, sans-serif;
-  margin:0;
-  padding:0 1rem;
+/* =========================================================
+   Root & Global
+   ========================================================= */
+:root{
+  --clr-primary   : #3b82f6;
+  --clr-secondary : #4ade80;
+  --clr-accent    : #f472b6;
+  --clr-bg-hero   : linear-gradient(135deg,#4f46e5 0%,#3b82f6 35%,#06b6d4 100%);
 }
-h1,h2,h3{margin:.5rem 0;}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Poppins',system-ui,sans-serif;
+  margin:0;
+  background:#f8fafc;               /* neutral backdrop for results page */
+  color:#1f2937;
+}
+h1,h2,h3{margin:.5rem 0;font-weight:600}
 
-/* ---------- Upload zone ---------- */
-.dropzone{
-  border:2px dashed #888;
+/* =========================================================
+   HERO (upload page only)
+   ========================================================= */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   padding:2rem;
+  overflow:hidden;
+  background:var(--clr-bg-hero);
+  color:#fff;
+  isolation:isolate;                /* blobs sit behind card */
+}
+
+/* floating blobs */
+.hero-bg{position:absolute;inset:0;overflow:hidden;z-index:0}
+.blob{
+  position:absolute;border-radius:50%;opacity:.35;filter:blur(60px);
+  animation:float 14s ease-in-out infinite;
+}
+.b1{width:480px;height:480px;background:var(--clr-secondary);top:-80px;left:-100px}
+.b2{width:360px;height:360px;background:var(--clr-accent);bottom:-120px;right:-80px;animation-delay:-4s}
+.b3{width:260px;height:260px;background:#facc15;top:50%;left:60%;animation-delay:-8s}
+@keyframes float{50%{transform:translateY(-50px) scale(1.05)}}
+
+/* glassy upload card */
+.upload-card{
+  width:100%;
+  max-width:520px;
+  padding:2.5rem 2.75rem;
+  border-radius:24px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(16px) saturate(120%);
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
   text-align:center;
-  margin:1rem 0;
+  z-index:1;
+}
+.upload-card h1{font-size:2rem;margin-bottom:.25rem}
+.tagline{font-size:1rem;font-weight:400;margin-bottom:1.5rem;opacity:.9}
+
+/* ------------ Drop-zone ------------ */
+.dropzone{
+  border:2.5px dashed rgba(255,255,255,.6);
+  padding:2.5rem 1.5rem;
+  border-radius:16px;
+  transition:border-color .3s,background .3s;
+  margin-bottom:1rem;
   cursor:pointer;
 }
+.dropzone p{margin:0;font-size:.95rem}
 .dropzone.dragover{
-  border-color:#3b82f6;
-  background:#eff6ff;
+  border-color:#fff;
+  background:rgba(255,255,255,.15);
 }
-.dropzone.disabled{
-  opacity:.5;
-  pointer-events:none;
+.dropzone.disabled{opacity:.45;pointer-events:none}
+
+/* chosen-file pill - push remove button to right edge */
+.selected {
+  background: rgba(0,0,0,.15);
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .4rem .9rem;
+  font-size: .9rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 100%;
 }
 
-/* ---------- Spinner ---------- */
+/* Ensure filename starts from left edge */
+#selectedFileName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: .6rem;
+  text-align: left; /* Ensure text starts from the left */
+  padding-left: 0;  /* Remove any potential padding */
+}
+
+/* Keep button fixed on right */
+#removeFileBtn {
+  background: none;
+  border: none;
+  color: #fee2e2;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0 0 .3rem;
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+/* ------------ Picker & Buttons ------------ */
+.picker-label{
+  display: block;
+  margin: .75rem 0 .25rem;
+  font-size: .9rem;
+  font-weight: 500;
+  text-align: left;
+  color: #e0e7ff;
+}
+.picker{
+  width:100%;padding:.55rem .75rem;border-radius:10px;border:none;
+  font-size:.95rem;background:rgba(255,255,255,.85);color:#111;
+  margin-bottom:1.25rem;
+}
+
+.btn-primary{
+  width:100%;padding:.75rem 1rem;border:none;border-radius:12px;
+  font-size:1.05rem;font-weight:600;cursor:pointer;color:#fff;
+  background:#111827;transition:background .25s,transform .15s;
+}
+.btn-primary:hover:not(:disabled){background:#0f172a}
+.btn-primary:active:not(:disabled){transform:scale(.97)}
+button:disabled{opacity:.45;cursor:not-allowed}
+
+.text-btn{
+  background:none;border:none;color:#fff;font-weight:600;
+  cursor:pointer;text-decoration:underline dotted;
+}
+.text-btn:hover{color:#e0e7ff}
+
+/* spinner (white for hero) */
 .spinner{
   width:32px;height:32px;
-  border:4px solid #ccc;
-  border-top-color:#3b82f6;
+  border:4px solid rgba(255,255,255,.25);
+  border-top-color:#fff;
   border-radius:50%;
   animation:spin 1s linear infinite;
-  margin-top:1rem;
+  margin:1rem auto 0;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* ---------- Helpers ---------- */
-.hidden{display:none;}
+/* =========================================================
+   EVERYTHING BELOW – original styles (results page/shared)
+   ========================================================= */
+.hidden{display:none}
 
-/* ---------- Two‑pane layout ---------- */
-.pane-container{
-  display:flex;
-  gap:1rem;
-  flex-wrap:wrap;
-}
-.pane{
-  flex:1 1 400px;
-  min-width:300px;
-  display:flex;
-  flex-direction:column;
-}
-.pane h3{margin-bottom:.5rem;}
+/* ---------- Two-pane layout ---------- */
+.pane-container{display:flex;gap:1rem;flex-wrap:wrap}
+.pane{flex:1 1 400px;min-width:300px;display:flex;flex-direction:column}
+.pane h3{margin-bottom:.5rem}
 
-/* ---------- Buttons ---------- */
+/* ---------- Buttons (results page) ---------- */
 .paid{
-  background:#3b82f6;
+  background:var(--clr-primary);
   color:#fff;
   border:none;
   padding:.6rem 1rem;
@@ -60,217 +173,168 @@ h1,h2,h3{margin:.5rem 0;}
   cursor:pointer;
   border-radius:6px;
 }
-button:disabled{
-  opacity:.45;
-  cursor:not-allowed;
-}
+#downloadBtn{margin-top:1rem}
 
-/* ---------- Improved‑draft column ---------- */
+/* ---------- Improved-draft column ---------- */
 #improvedText{
   max-height:80vh;
   overflow:auto;
   white-space:pre-wrap;
-  border:none;
-  padding:0;
   margin:0;
-  box-sizing:border-box;
 }
 
-/* Optional colour‑coded highlights */
-.improved-box mark.red    {background:#fecaca;}
-.improved-box mark.yellow {background:#fef9c3;}
-.improved-box mark.green  {background:#dcfce7;}
+/* highlight marks */
+.improved-box mark.red    {background:#fecaca}
+.improved-box mark.yellow {background:#fef9c3}
+.improved-box mark.green  {background:#dcfce7}
 
-/* ---------- Selected‑file pill ---------- */
-#selectedFileDisplay{
-  display:flex;
-  align-items:center;
-  gap:.5rem;
-  margin-top:.5rem;
-}
-#selectedFileDisplay.hidden{display:none;}
-#removeFileBtn{
-  background:none;
-  border:none;
-  color:#f87171;
-  font-size:1.2rem;
-  cursor:pointer;
-  padding:0 .3rem;
-}
+/* ---------- Selected-file pill (legacy on results) ---------- */
+#selectedFileDisplay{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+#selectedFileDisplay.hidden{display:none}
 
 /* ---------- PDF viewer ---------- */
-.pdf-scroll{
-  max-height:80vh;
-  overflow:auto;
-}
-.pdf-scroll canvas{
-  display:block;
-  margin-bottom:12px;
-  width:100%;
-  height:auto;
-}
-#pdfOriginal{border:1px solid #ddd;}
+.pdf-scroll{max-height:80vh;overflow:auto}
+.pdf-scroll canvas{display:block;margin-bottom:12px;width:100%;height:auto}
+#pdfOriginal{border:1px solid #ddd}
 
 /* =========================================================
    Results info boxes (section cards)
    ========================================================= */
-
 .info-container{
   width:100%;
   max-width:600px;
-  margin:0 0 1rem 0;           /* vertical gap between boxes */
+  margin:0 0 1rem 0;
   background:#fafafa;
   border-radius:12px;
   box-shadow:0 4px 8px rgba(0,0,0,.06);
   color:#333;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  overflow: hidden;  /* Ensures content doesn't overflow rounded corners */
 }
-
-/* Inner generic spacing */
-.info-container .section{padding:1rem 0;}
+.info-container .section{padding:1rem 0}
 
 /* Main title text */
 .info-container .main-title{
-  font-size:1.8rem;
-  font-weight:700;
-  margin:0;
-  padding:0;
-  flex:1;
+  font-size:1.8rem;font-weight:700;margin:0;padding:0;flex:1;
 }
-
-/* Sub‑section headers */
+/* Sub-section headers */
 .info-container .section-title{
-  font-size:1.4rem;
-  font-weight:600;
-  margin:0 0 .5rem 0;
-  padding-bottom:.25rem;
+  font-size:1.4rem;font-weight:600;margin:0 0 .5rem 0;padding-bottom:.25rem;
 }
-
-/* Divider between sub‑sections */
+/* Divider between subsections */
 .info-container .separator{
-  border-top:1.5px solid #ccc;
-  margin-top:1rem;
+  border-top:1.5px solid #ccc;margin-top:1rem;
 }
-
 /* Bulleted lists */
-.info-container ul{margin:0;padding-left:1.25rem;}
-.info-container ul li{margin-bottom:.4rem;line-height:1.4;}
+.info-container ul{margin:0;padding-left:1.25rem}
+.info-container ul li{margin-bottom:.4rem;line-height:1.4}
 
 /* Responsive tweaks */
 @media (max-width:480px){
-  .info-container{padding:1rem;}
-  .info-container .main-title  {font-size:1.5rem;}
-  .info-container .section-title{font-size:1.2rem;}
+  .info-container{padding:1rem}
+  .info-container .main-title  {font-size:1.5rem}
+  .info-container .section-title{font-size:1.2rem}
 }
 
 /* =========================================================
    Circular score badge
    ========================================================= */
-
-.score-label{
-  position:relative;
-  width:120px;height:120px;
-  margin:0 auto;
-}
-.score-label.small{
-  width:60px;height:60px;
-  margin:0;
-}
-.score-label.small .score-text{font-size:1.2rem;}
-
+.score-label{position:relative;width:120px;height:120px;margin:0 auto}
+.score-label.small{width:60px;height:60px;margin:0}
+.score-label.small .score-text{font-size:1.2rem}
 .score-label svg{
-  width:100%;height:100%;
-  display:block;
-  transform:rotate(90deg);
-  transform-origin:50% 50%;
+  width:100%;height:100%;display:block;
+  transform:rotate(90deg);transform-origin:50% 50%;
 }
-.circle-bg{
-  fill:none;
-  stroke:#eee;
-  stroke-width:10;
-}
+.circle-bg{fill:none;stroke:#eee;stroke-width:10}
 .circle-progress{
-  fill:none;
-  stroke:#007bff;
-  stroke-width:10;
-  stroke-linecap:round;
+  fill:none;stroke:#007bff;stroke-width:10;stroke-linecap:round;
   transition:stroke-dashoffset .8s ease-out;
 }
 .score-text{
-  position:absolute;
-  top:50%;left:50%;
+  position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
-  font:700 2rem/1 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font:700 2rem/1 'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
   color:#007bff;
 }
 
 /* =========================================================
-   Collapsible header, toggle arrow & body
+   Collapsible header/body
    ========================================================= */
-
-/* Header row */
 .section-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:1rem 1.5rem;
-  cursor:pointer;
-  user-select:none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  user-select: none;
   background:#fff;
-  border-bottom:1.5px solid #ccc;
+  border-bottom: 1.5px solid #ccc;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
-.section-header .main-title{flex:1;margin:0;font-size:1.6rem;font-weight:700;}
+.section-header .main-title{
+  flex: 1;  
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
 
-/* Arrow button */
+/* arrow toggle */
 .toggle-btn{
-  font-size:1.6rem;
-  background:none;
-  border:none;
-  color:#007bff;
-  width:32px;height:32px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  font-size:1.6rem;background:none;border:none;color:#007bff;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
   transition:transform .3s ease;
 }
-.toggle-btn.expanded{transform:rotate(180deg);}
+.toggle-btn.expanded{transform:rotate(180deg)}
 
-/* Collapsible body */
+/* collapsible body */
 .section-content{
-  overflow:hidden;
-  max-height:0;
-  padding:0 1.5rem;
-  background:#fafafa;
-  transition:max-height .4s ease,padding .3s ease;
+  overflow:hidden;max-height:0;padding:0 1.5rem;
+  background:#fafafa;transition:max-height .4s ease,padding .3s ease;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 .section-content.expanded{
-  max-height:2000px;           /* large enough to show full content */
-  padding-top:1rem;
-  padding-bottom:1.5rem;
+  max-height:2000px;           /* big enough */
+  padding-top:1rem;padding-bottom:1.5rem;
 }
 
 /* =========================================================
-   Legacy helpers kept for compatibility
+   Legacy helper (header-with-score)
    ========================================================= */
-
-/* Align header title & score when you *don’t* need collapsible */
 .header-with-score{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
-  width:100%;
-  position:relative;
-  padding-bottom:1.2rem;
-  margin-bottom:.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  width:100%;position:relative;padding-bottom:1.2rem;margin-bottom:.5rem;
 }
 .header-with-score::after{
-  content:'';
-  position:absolute;
-  bottom:0;left:0;
-  height:2px;width:100%;
+  content:'';position:absolute;bottom:0;left:0;height:2px;width:100%;
   background:#007bff;
 }
 
-/* Ensure improved text wraps normally inside cards */
-#improvedText,#improvedText *{white-space:normal;}
+/* ensure improved text wraps inside cards */
+#improvedText,#improvedText *{white-space:normal}
+
+
+
+
+/* Add left padding to the results view */
+#results-view {
+  padding-left: 2rem; /* Adds space on the left edge */
+}
+
+/* Maintain proper spacing within panes */
+.pane-container {
+  padding-right: 2rem; /* Balance the padding on the right side */
+}
+
+/* For smaller screens, adjust padding to be responsive */
+@media (max-width: 768px) {
+  #results-view {
+    padding-left: 1rem; 
+  }
+  
+  .pane-container {
+    padding-right: 1rem;
+  }
+}

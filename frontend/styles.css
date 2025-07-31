@@ -417,7 +417,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 /* =========================================================
    Edit button (for PDF editing)
    ========================================================= */
-   
+
 .edit-btn{
   position: absolute;
   top: 12px;
@@ -440,3 +440,48 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .edit-btn:hover  {transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,.25);}
 .edit-btn:active {transform: scale(.93);}
 .edit-btn svg    {pointer-events: none;} /* let the click fall through to the button */
+
+
+
+/* =========================================================
+   RESULTS VIEW ⇢ glassy “card” aesthetic (matches hero)
+   ========================================================= */
+#results-view .info-container{
+  /* glass effect */
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.35);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);   /* light depth */
+  color: #1f2937;                  /* keep dark body copy for legibility */
+}
+
+/* let the glass show through */
+#results-view .info-container .section-header{
+  background: transparent;
+  border-bottom: 1px solid rgba(255,255,255,.35);
+}
+#results-view .info-container .section-content{
+  background: transparent;
+}
+
+/* vivid header + controls */
+#results-view .info-container .main-title { color:#fff; }
+#results-view .info-container .toggle-btn{ color: var(--clr-primary); }
+
+/* subtle separators so they don’t look “cut-out” on glass */
+#results-view .info-container .separator{
+  border-top: 1px solid rgba(255,255,255,.35);
+}
+
+/* score badge tweaks for dark/light harmony */
+#results-view .info-container .circle-bg  { stroke: rgba(255,255,255,.45); }
+#results-view .info-container .score-text { color:#fff; }
+
+/* (optional) mark highlights: keep contrast with new glass theme */
+#results-view .info-container mark.red,
+#results-view .info-container mark.yellow,
+#results-view .info-container mark.green{
+  color:#0f172a;                   /* dark text inside the highlight */
+  font-weight:600;
+}

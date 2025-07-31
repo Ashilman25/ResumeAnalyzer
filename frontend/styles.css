@@ -202,8 +202,8 @@ button:disabled{opacity:.45;cursor:not-allowed}
   background: white;
   padding: 12px;
   
-  /* This is the key change - use both properties */
   overflow: hidden auto; /* horizontal:hidden, vertical:auto */
+  position: relative; /* for absolute positioning of canvas */
 }
 
 /* Ensure canvas elements fit properly */
@@ -412,3 +412,31 @@ button:disabled{opacity:.45;cursor:not-allowed}
   position:relative;   /* creates its own stacking context       */
   z-index:1;           /* higher than the –1 blobs               */
 }
+
+
+/* =========================================================
+   Edit button (for PDF editing)
+   ========================================================= */
+   
+.edit-btn{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;            /* stays visible on any PDF background   */
+  color: var(--clr-primary);   /* the same blue you use elsewhere       */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,.15);
+  transition: transform .15s ease, box-shadow .15s ease;
+  z-index: 20;                 /* floats above every canvas page        */
+}
+
+.edit-btn:hover  {transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,.25);}
+.edit-btn:active {transform: scale(.93);}
+.edit-btn svg    {pointer-events: none;} /* let the click fall through to the button */

@@ -485,3 +485,68 @@ button:disabled{opacity:.45;cursor:not-allowed}
   color:#0f172a;                   /* dark text inside the highlight */
   font-weight:600;
 }
+
+
+/* =========================================================
+   PDF Editing Visuals
+   ========================================================= */
+
+
+
+/* Floating Save / Cancel bar (now ABOVE the PDF) */
+.edit-controls{
+  position:absolute;           /* anchored by JS to bottom:100% */
+  display:flex;
+  gap:.8rem;
+  z-index:40;
+}
+.edit-controls.hidden{display:none}
+
+/* Glassy buttons */
+.edit-controls button{
+  padding:.55rem 1.25rem;
+  border-radius:10px;
+  font:600 .95rem/1 "Poppins",sans-serif;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.45);
+  background:rgba(255,255,255,.20);
+  color:#ffffff;
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:0 3px 10px rgba(0,0,0,.18);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.edit-controls button:hover  {transform:scale(1.07);}
+.edit-controls button:active {transform:scale(.94);}
+
+/* Accent tints so users can tell them apart instantly */
+.edit-save   {background:rgba(0, 255, 94, 0.3);}  /* greenish */
+.edit-cancel {background:rgba(255, 0, 0, 0.35);} /* reddish  */
+
+.edit-controls button.edit-save   {background:rgba(74,222,128,.80); color: #050404}
+.edit-controls button.edit-cancel{background:rgba(248,113,113,.80); color:#050404;}
+
+
+
+/* 1 ─ Center the bar & keep it above other content */
+.pane { position: relative; }                 /* establish containing block */
+
+.edit-controls   { position:absolute; top:4px; left:50%;
+                   transform:translateX(-50%); }
+
+/* 2 ─ Dim everything except the PDF & the bar */
+#results-view.editing-active::before{
+  content:'';
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(2px);
+  pointer-events:none;
+  z-index: 30;                                /* sits below controls/PDF   */
+}
+
+/* Lift the PDF column itself above the dimmer */
+#results-view.editing-active .pdf-scroll{
+  position: relative;
+  z-index: 50;
+}

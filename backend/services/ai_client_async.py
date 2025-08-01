@@ -7,7 +7,7 @@ from openai import AsyncOpenAI
 ac = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 SECTION_PROMPT = open("backend/prompts/section_prompt.txt").read()
 
-# ---------- Helpers ----------------------------------------------------------
+
 def _safe_json_loads(raw: str) -> dict:
     """
     Pull the first {...} JSON blob out of the assistant’s reply and parse it.
@@ -19,7 +19,7 @@ def _safe_json_loads(raw: str) -> dict:
     return json.loads(match.group())
 
 
-# ---------- Async scoring wrapper -------------------------------------------
+
 async def score_section_async(section_name: str, section_text: str, industry: str):
     """
     One-shot prompt → JSON result for a single résumé section.

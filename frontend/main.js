@@ -140,9 +140,12 @@ function wireCollapsibles() {
 }
 
 function showDraftOverlay(html) {
-  /* 1 — Create the full-screen dimmer + sheet */
+  /* 0 — Freeze background scroll */
+  document.body.classList.add('no-scroll');
+
+  /* 1 — Dimmer + editable sheet */
   const dimmer = document.createElement('div');
-  dimmer.id = 'draftDimmer';               //♦ already styled in CSS
+  dimmer.id = 'draftDimmer';
   document.body.appendChild(dimmer);
 
   const sheet  = document.createElement('div');
@@ -151,9 +154,9 @@ function showDraftOverlay(html) {
   sheet.innerHTML = html;
   dimmer.appendChild(sheet);
 
-  /* 2 — Create the new floating CLOSE button (outside the dimmer) */
+  /* 2 — CLOSE button (top-left) */
   const closer = document.createElement('button');
-  closer.id   = 'draftCloseBtn';           //♦ new style block just below
+  closer.id = 'draftCloseBtn';
   closer.type = 'button';
   closer.innerHTML = `
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -162,16 +165,65 @@ function showDraftOverlay(html) {
     </svg>`;
   document.body.appendChild(closer);
 
-  /* 3 — Wiring */
-  const removeOverlay = () => {
+  /* 3 — DOWNLOAD button (top-right) */
+  const downloader = document.createElement('button');
+  downloader.id = 'draftDownloadBtn';
+  downloader.type = 'button';
+  downloader.innerHTML = `
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 3v14m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+  document.body.appendChild(downloader);
+
+  /* 4 — Helpers */
+  const tearDown = () => {
     dimmer.remove();
     closer.remove();
+    downloader.remove();
+    document.body.classList.remove('no-scroll');
   };
-  closer.addEventListener('click', removeOverlay);
-  /* ESC-key support for power users */
-  const escHandler = (e) => { if (e.key === 'Escape') removeOverlay(); };
-  document.addEventListener('keydown', escHandler, { once:true });
+
+  /* 5 — Events */
+  closer.addEventListener('click', tearDown);
+  document.addEventListener('keydown',
+    (e)=>{ if (e.key === 'Escape') tearDown(); },
+    { once:true }
+  );
+
+  downloader.addEventListener('click', () => {
+    /* remember current inline styles */
+    const prev = { width: sheet.style.width,
+                  height: sheet.style.height,
+                  overflow: sheet.style.overflow };
+
+    /* 1 — make the node fully visible */
+    sheet.style.height   = sheet.scrollHeight + 'px';
+    sheet.style.overflow = 'visible';
+
+    /* 2 — shrink it to the printable width: 8.5 in − 2×0.4 in */
+    sheet.style.width = '7.7in';
+
+    /* 3 — export */
+    html2pdf().set({
+        margin: 0.4,
+        filename: 'Resume_Draft.pdf',
+        image: { type:'jpeg', quality:0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      })
+      .from(sheet)
+      .save()
+      .then(() => {
+        /* 4 — restore everything exactly as it was */
+        Object.assign(sheet.style, prev);
+      })
+      .catch(console.error);
+  });
+
+
 }
+
 
 
 // Basic PDF.js setup
@@ -285,14 +337,6 @@ async function renderResults(data, originalFile) {
     console.error('PDF render failed', err);
   }
 
-  document.getElementById('downloadBtn').onclick = () => {
-    const plain = [...improvedBox.querySelectorAll('.sec-card')]
-      .map(card => card.innerText.trim())
-      .join('\n\n');
-    downloadImproved(plain);
-  };
-
-
   initScoreLabels(); 
   wireCollapsibles(); 
 }
@@ -379,13 +423,3 @@ function loadTestEnvironment() {
 if (TESTING_MODE) {
   loadTestEnvironment();
 }
-
-// function downloadImproved(text) {
-//   const blob = new Blob([text], { type: 'text/plain' });
-//   const url = URL.createObjectURL(blob);
-//   const a = document.createElement('a');
-//   a.href = url;
-//   a.download = 'Improved_Resume_v1.txt';
-//   a.click();
-//   URL.revokeObjectURL(url);
-// }

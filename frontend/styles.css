@@ -173,7 +173,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
   cursor:pointer;
   border-radius:6px;
 }
-#downloadBtn{margin-top:1rem}
 
 /* ---------- Improved-draft column ---------- */
 #improvedText{
@@ -709,3 +708,42 @@ button:disabled{opacity:.45;cursor:not-allowed}
 }
 
 #draftCloseBtn svg{pointer-events:none;}
+
+
+/* Freeze <body> scrolling when a modal is active */
+body.no-scroll{
+  overflow:hidden;          /* hides desktop scroll-bar   */
+  overscroll-behavior:none; /* blocks rubber-band on iOS  */
+}
+
+/* ──────────────────────────────────────────────────────────
+   Floating “Download PDF” button (shows during draft view)
+   ────────────────────────────────────────────────────────── */
+#draftDownloadBtn{
+  position:fixed;
+  top:22px;
+  right:22px;                /* opposite the close button */
+  width:46px;
+  height:46px;
+  border:none;
+  border-radius:50%;
+  background:linear-gradient(135deg,#4ade80 0%,#22c55e 100%);
+  color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);
+  cursor:pointer;
+  z-index:400;               /* same layer as #draftCloseBtn */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform .18s cubic-bezier(.25,.46,.45,.94),
+             box-shadow .18s;
+}
+#draftDownloadBtn:hover{
+  transform:scale(1.12);
+  box-shadow:0 6px 20px rgba(0,0,0,.30);
+}
+#draftDownloadBtn:active{
+  transform:scale(.95);
+  box-shadow:0 3px 10px rgba(0,0,0,.20);
+}
+#draftDownloadBtn svg{pointer-events:none;}

@@ -139,12 +139,69 @@ function wireCollapsibles() {
   });
 }
 
+function showDraftOverlay(html){
+  /* dimmer */
+  const dimmer = document.createElement('div');
+  dimmer.id = 'draftDimmer';
+  document.body.appendChild(dimmer);
+
+  /* paper */
+  const sheet = document.createElement('div');
+  sheet.className = 'draft-sheet';
+  sheet.contentEditable = true;
+  sheet.innerHTML = html;
+  dimmer.appendChild(sheet);
+
+  /* click-out to close */
+  dimmer.addEventListener('click', e=>{
+    if(e.target===dimmer) dimmer.remove();
+  });
+}
+
+
 // Basic PDF.js setup
 async function renderResults(data, originalFile) {
   /* view swap */
   uploadView.classList.add('hidden');
   resultsView.classList.remove('hidden');
+  
+  // Add Generate Draft button to top right of results page
+  if (!document.getElementById('generateDraftBtn')) {
+    const generateDraftBtn = document.createElement('button');
+    generateDraftBtn.id = 'generateDraftBtn';
+    generateDraftBtn.className = 'generate-draft-btn';
+    generateDraftBtn.textContent = 'Generate Draft';
 
+    generateDraftBtn.onclick = async () => {
+      // full-page loading veil
+      const veil = document.createElement('div');
+      veil.id = 'draftLoading';
+      veil.innerHTML = '<div class="spinner"></div>';
+      document.body.appendChild(veil);
+
+      try {
+        const fd = new FormData();
+        fd.append('pdf', selectedFile);
+        fd.append('targetIndustry',
+                  document.getElementById('industrySelect').value);
+
+        const res = await fetch('http://localhost:8000/draft', {
+          method: 'POST', body: fd
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const { html } = await res.json();
+        showDraftOverlay(html);
+      } catch (e) {
+        alert('Failed to generate draft'); console.error(e);
+      } finally {
+        veil.remove();                 // hide buffer view
+      }
+    };
+    
+    // Add to results view in top right position
+    resultsView.appendChild(generateDraftBtn);
+  }
+  
   /* overall score block */
   const scoresPanel = document.getElementById('scoresPanel');
   scoresPanel.innerHTML = `

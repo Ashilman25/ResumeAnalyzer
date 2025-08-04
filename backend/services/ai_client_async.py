@@ -6,6 +6,8 @@ from openai import AsyncOpenAI
 
 ac = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 SECTION_PROMPT = open("backend/prompts/section_prompt.txt").read()
+DRAFT_PROMPT = open("backend/prompts/draft_prompt.txt").read()
+
 
 
 def _safe_json_loads(raw: str) -> dict:
@@ -52,3 +54,21 @@ async def score_section_async(section_name: str, section_text: str, industry: st
             "improvements": [],
             "rewrittenBullets": [],
         }
+
+async def create_draft_html(full_text: str, sections_json: list):
+    prompt = DRAFT_PROMPT.format(
+        full_resume_text = full_text[:12000],
+        sections_json    = json.dumps(sections_json)
+    )
+    resp = await ac.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+
+    raw = resp.choices[0].message.content.strip()
+
+    if raw.startswith("```"):
+        raw = re.sub(r"^```[\w]*\s*|\s*```$", "", raw, flags=re.S).strip()
+
+    return raw

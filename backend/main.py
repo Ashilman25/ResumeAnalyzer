@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.routers import analyze
+from backend.routers import analyze, draft
 
 app = FastAPI(title="Resume AI MVP")
 
@@ -21,3 +21,4 @@ def health():
     return {"status": "ok"}
 
 app.include_router(analyze.router)
+app.include_router(draft.router)

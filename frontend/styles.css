@@ -550,3 +550,92 @@ button:disabled{opacity:.45;cursor:not-allowed}
   position: relative;
   z-index: 50;
 }
+
+/* =========================================================
+   New Draft Button (results view) - Enhanced
+   ========================================================= */
+.generate-draft-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  
+  /* Rich gradient background instead of flat color */
+  background: linear-gradient(135deg, var(--clr-primary) 0%, #2563eb 100%);
+  
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  z-index: 100;
+  
+  /* Enhanced shadow */
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  /* Smooth transitions for all properties */
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.2s ease,
+              background 0.3s ease;
+              
+  /* Add a subtle text shadow */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Grow on hover with enhanced shadow */
+.generate-draft-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+/* Push down effect when clicked */
+.generate-draft-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+}
+
+
+#results-view.editing-active,
+#draftDimmer { overscroll-behavior: contain; }
+
+/* =========================================================
+   Draft overlay
+   ========================================================= */
+#draftDimmer{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.45);      /* softer dim */
+  backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;
+  z-index:300;
+}
+
+.draft-sheet{
+  width:min(90vw,816px);           /* keep full-page from happening */
+  height:min(90vh,1056px);
+  background:#fff;
+  border-radius:16px;              /* rounded corners */
+  padding:2rem;
+  overflow:auto;                   /* scrollable */
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+
+/* =========================================================
+   Full-page spinner overlay (draft generation)
+   ========================================================= */
+#draftLoading{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(2px);
+  display:flex;align-items:center;justify-content:center;
+  z-index:250;                     /* below #draftDimmer (300) */
+}
+#draftLoading .spinner{
+  width:48px;height:48px;          /* a bit larger */
+  border-width:6px;
+  border-color:rgba(255,255,255,.25);
+  border-top-color:#fff;
+}

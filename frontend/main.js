@@ -139,23 +139,38 @@ function wireCollapsibles() {
   });
 }
 
-function showDraftOverlay(html){
-  /* dimmer */
+function showDraftOverlay(html) {
+  /* 1 — Create the full-screen dimmer + sheet */
   const dimmer = document.createElement('div');
-  dimmer.id = 'draftDimmer';
+  dimmer.id = 'draftDimmer';               //♦ already styled in CSS
   document.body.appendChild(dimmer);
 
-  /* paper */
-  const sheet = document.createElement('div');
+  const sheet  = document.createElement('div');
   sheet.className = 'draft-sheet';
   sheet.contentEditable = true;
   sheet.innerHTML = html;
   dimmer.appendChild(sheet);
 
-  /* click-out to close */
-  dimmer.addEventListener('click', e=>{
-    if(e.target===dimmer) dimmer.remove();
-  });
+  /* 2 — Create the new floating CLOSE button (outside the dimmer) */
+  const closer = document.createElement('button');
+  closer.id   = 'draftCloseBtn';           //♦ new style block just below
+  closer.type = 'button';
+  closer.innerHTML = `
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path d="M13 5L5 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M5 5L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+  document.body.appendChild(closer);
+
+  /* 3 — Wiring */
+  const removeOverlay = () => {
+    dimmer.remove();
+    closer.remove();
+  };
+  closer.addEventListener('click', removeOverlay);
+  /* ESC-key support for power users */
+  const escHandler = (e) => { if (e.key === 'Escape') removeOverlay(); };
+  document.addEventListener('keydown', escHandler, { once:true });
 }
 
 

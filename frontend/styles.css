@@ -639,3 +639,73 @@ button:disabled{opacity:.45;cursor:not-allowed}
   border-color:rgba(255,255,255,.25);
   border-top-color:#fff;
 }
+
+/* Stylish close button for draft view */
+.draft-close-btn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.07);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.draft-close-btn:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: #334155;
+  transform: scale(1.05);
+}
+
+.draft-close-btn:active {
+  transform: scale(0.95);
+}
+
+/* Make sure the draft sheet has proper positioning for the button */
+.draft-sheet {
+  position: relative;
+  /* your existing styles */
+} 
+
+/* ──────────────────────────────────────────────────────────
+   Floating ✕ button that lives *above* the dimmer
+   ────────────────────────────────────────────────────────── */
+#draftCloseBtn{
+  position:fixed;
+  top:22px;           /* fine-tuned to avoid OS bars */
+  left:22px;
+  width:42px;
+  height:42px;
+  border:none;
+  border-radius:50%;
+  background:linear-gradient(135deg,#f87171 0%,#ef4444 100%);
+  color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);
+  cursor:pointer;
+  z-index:400;        /* > #draftDimmer (300) so it stays UN-dimmed */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform .18s cubic-bezier(.25,.46,.45,.94),
+             box-shadow .18s;
+}
+
+#draftCloseBtn:hover{
+  transform:scale(1.12) rotate(90deg);
+  box-shadow:0 6px 20px rgba(0,0,0,.30);
+}
+
+#draftCloseBtn:active{
+  transform:scale(.95);
+  box-shadow:0 3px 10px rgba(0,0,0,.20);
+}
+
+#draftCloseBtn svg{pointer-events:none;}

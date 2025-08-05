@@ -735,8 +735,7 @@ body.no-scroll{
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:transform .18s cubic-bezier(.25,.46,.45,.94),
-             box-shadow .18s;
+  transition:transform .18s cubic-bezier(.25,.46,.45,.94), box-shadow .18s;
 }
 #draftDownloadBtn:hover{
   transform:scale(1.12);
@@ -747,3 +746,161 @@ body.no-scroll{
   box-shadow:0 3px 10px rgba(0,0,0,.20);
 }
 #draftDownloadBtn svg{pointer-events:none;}
+
+
+
+/* =========================================================
+   The google drive editing bar
+   ========================================================= */
+
+.draft-sheet .toolbar{
+  display:flex;
+  gap:4px;
+  align-items:center;
+  padding:4px 8px;
+  background:#f8f9fa;
+  border-bottom:1px solid #e0e0e0;
+  position:sticky;  /* sticks to the top of the modal while scrolling */
+  top:0;
+  overflow-x:auto;
+  z-index:5;        /* above the page content inside the modal */
+}
+
+.draft-sheet .toolbar select,
+.draft-sheet .toolbar input[type=number]{
+  padding:2px 4px;
+  border:1px solid #e0e0e0;
+  border-radius:4px;
+  background:#fff;
+  font-size:14px;
+}
+
+.draft-sheet .toolbar button{
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:16px;
+  padding:6px;
+  color:#444;
+  border-radius:4px;
+}
+.draft-sheet .toolbar button:hover,
+.draft-sheet .toolbar button.active{
+  background:#e8f0fe;
+  color:#1a73e8;
+}
+
+.draft-sheet .icon-pair{display:flex}
+
+/* editable area inside modal */
+#draftEditor{
+  padding:40px 60px;
+  min-height:calc(100% - 56px); /* room for sticky bar */
+  outline:none;
+  line-height:1.5em;
+}
+
+/* hide scrollbars in macOS style overlay for a cleaner look (optional) */
+.draft-sheet::-webkit-scrollbar{width:8px}
+.draft-sheet::-webkit-scrollbar-track{background:transparent}
+.draft-sheet::-webkit-scrollbar-thumb{
+  background:rgba(0,0,0,.15);border-radius:4px;
+}
+
+/* =========================================================
+   Global draft-edit toolbar – centred pill
+   ========================================================= */
+#draftToolbar{
+  position:fixed;
+  /* centre horizontally */
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+
+  /* auto-width pill */
+  display:flex;
+  gap:4px;
+  align-items:center;
+  padding:6px 12px;               /* extra side padding = nicer curve */
+  background:#f8f9fa;
+  border:1px solid #e0e0e0;
+  border-top:none;                /* seamless with window edge */
+  border-bottom-left-radius:12px;
+  border-bottom-right-radius:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,.12);
+
+  /* overflow */
+  overflow-x:auto;
+  max-width:calc(100% - 120px);   /* keep 60 px clear each side for ✕ & ⇩ */
+  z-index:500;                    /* still above the dimmer */
+}
+
+#draftToolbar select,
+#draftToolbar input[type=number]{
+  padding:2px 4px;
+  border:1px solid #e0e0e0;
+  border-radius:4px;
+  background:#fff;
+  font-size:14px;
+}
+
+#draftToolbar button{
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:16px;
+  padding:6px;
+  color:#444;
+  border-radius:4px;
+}
+#draftToolbar button:hover,
+#draftToolbar button.active{
+  background:#e8f0fe;
+  color:#1a73e8;
+}
+
+#draftToolbar .icon-pair{display:flex}
+
+#draftCloseBtn,
+#draftDownloadBtn{
+  z-index: 600;         
+}
+
+#draftToolbar{
+  z-index: 450;         
+}
+
+.draft-sheet{ padding-top:84px; }
+
+/* Fix button size in draft view */
+#draftCloseBtn,
+#draftDownloadBtn {
+  /* Enforce minimum size */
+  min-width: 42px !important;
+  min-height: 42px !important;
+  
+  /* Prevent content shrinking */
+  flex-shrink: 0;
+  
+  /* Ensure consistent sizing */
+  font-size: 22px;
+  line-height: 1;
+  
+  /* Better content centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Specific size for download button (slightly larger) */
+#draftDownloadBtn {
+  min-width: 46px !important;
+  min-height: 46px !important;
+}
+
+/* Keep the content from shrinking */
+#draftCloseBtn > *,
+#draftDownloadBtn > * {
+  flex-shrink: 0;
+  transform-origin: center;
+}

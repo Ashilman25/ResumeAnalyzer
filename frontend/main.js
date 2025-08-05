@@ -20,22 +20,22 @@ browseBtn.onclick = () => {
   if (!selectedFile) fileInput.click();
 };
 
-function showSelected(file) {
+function showSelected(file) {  
   selectedFile = file;
   analyzeBtn.disabled = !selectedFile;
   selectedFileName.textContent = file.name;
   selectedFileDisplay.classList.remove('hidden');
-  browseBtn.disabled = true;               // grey out
-  fileInput.disabled = true;               // disable file input
-  dropzone.classList.add('disabled');      // visually gray out dropzone
+  browseBtn.disabled = true;               
+  fileInput.disabled = true;               
+  dropzone.classList.add('disabled');      
 }
 
 function clearSelected() {
   selectedFile = null;
   fileInput.value = "";
   analyzeBtn.disabled = true;
-  selectedFileName.textContent = "";                // clear name
-  selectedFileDisplay.classList.add('hidden');      // hide name + X
+  selectedFileName.textContent = "";              
+  selectedFileDisplay.classList.add('hidden');    
   browseBtn.disabled = false;
   fileInput.disabled = false;
   dropzone.classList.remove('disabled');
@@ -139,90 +139,189 @@ function wireCollapsibles() {
   });
 }
 
-function showDraftOverlay(html) {
-  /* 0 — Freeze background scroll */
+function showDraftOverlay(html){
+  /* freeze background scroll */
   document.body.classList.add('no-scroll');
 
-  /* 1 — Dimmer + editable sheet */
+  /* -------- 1 · floating toolbar (outside dimmer) -------- */
+  const toolbar = document.createElement('div');
+  toolbar.id = 'draftToolbar';
+  toolbar.innerHTML = `
+    <!-- COMPLETE toolbar markup -->
+    <select id="style">
+      <option value="p">Normal text</option>
+      <option value="h1">Title</option>
+      <option value="h2">Heading 1</option>
+      <option value="h3">Heading 2</option>
+    </select>
+
+    <select id="fontName">
+      <option selected>Arial</option>
+      <option>Times New Roman</option>
+      <option>Georgia</option>
+      <option>Courier New</option>
+    </select>
+
+    <div class="icon-pair">
+      <button id="fontMinus" title="Smaller"><i class="fa-solid fa-minus"></i></button>
+      <input id="fontSize" type="number" value="14" min="8" max="96" style="width:48px">
+      <button id="fontPlus"  title="Bigger"><i class="fa-solid fa-plus"></i></button>
+    </div>
+
+    <button data-command="bold"      title="Bold"><i class="fa-solid fa-bold"></i></button>
+    <button data-command="italic"    title="Italic"><i class="fa-solid fa-italic"></i></button>
+    <button data-command="underline" title="Underline"><i class="fa-solid fa-underline"></i></button>
+
+    <input type="color" id="foreColor"   title="Text colour">
+    <input type="color" id="hiliteColor" title="Highlight">
+
+    <button id="createLink"  title="Insert link"><i class="fa-solid fa-link"></i></button>
+    <button id="insertImage" title="Insert image"><i class="fa-regular fa-image"></i></button>
+    <input  id="imageInput" type="file" accept="image/*" hidden>
+
+    <button data-command="justifyLeft"   title="Align left"><i class="fa-solid fa-align-left"></i></button>
+    <button data-command="justifyCenter" title="Align centre"><i class="fa-solid fa-align-center"></i></button>
+    <button data-command="justifyRight"  title="Align right"><i class="fa-solid fa-align-right"></i></button>
+
+    <button data-command="insertUnorderedList" title="Bulleted list"><i class="fa-solid fa-list-ul"></i></button>
+    <button data-command="insertOrderedList"   title="Numbered list"><i class="fa-solid fa-list-ol"></i></button>
+
+    <button data-command="outdent" title="Decrease indent"><i class="fa-solid fa-outdent"></i></button>
+    <button data-command="indent"  title="Increase indent"><i class="fa-solid fa-indent"></i></button>
+
+    <button id="removeFormat" title="Clear formatting"><i class="fa-solid fa-eraser"></i></button>
+  `;
+
+  document.body.appendChild(toolbar);
+
+  /* -------- 2 · dimmer + sheet -------- */
   const dimmer = document.createElement('div');
   dimmer.id = 'draftDimmer';
   document.body.appendChild(dimmer);
 
-  const sheet  = document.createElement('div');
+  const sheet = document.createElement('div');
   sheet.className = 'draft-sheet';
-  sheet.contentEditable = true;
-  sheet.innerHTML = html;
   dimmer.appendChild(sheet);
 
-  /* 2 — CLOSE button (top-left) */
-  const closer = document.createElement('button');
-  closer.id = 'draftCloseBtn';
-  closer.type = 'button';
-  closer.innerHTML = `
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path d="M13 5L5 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M5 5L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>`;
-  document.body.appendChild(closer);
+  /* editable region */
+  const editor = document.createElement('div');
+  editor.id = 'draftEditor';
+  editor.contentEditable = true;
+  editor.innerHTML = html;
+  sheet.appendChild(editor);
 
-  /* 3 — DOWNLOAD button (top-right) */
-  const downloader = document.createElement('button');
-  downloader.id = 'draftDownloadBtn';
-  downloader.type = 'button';
-  downloader.innerHTML = `
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path d="M12 3v14m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`;
-  document.body.appendChild(downloader);
+  /* -------- 3 · close & download -------- */
+  const closeBtn = document.createElement('button');
+  closeBtn.id = 'draftCloseBtn';
+  closeBtn.innerHTML = '×';
+  document.body.appendChild(closeBtn);
 
-  /* 4 — Helpers */
+  const downloadBtn = document.createElement('button');
+  downloadBtn.id = 'draftDownloadBtn';
+  downloadBtn.innerHTML = '⇩';
+  document.body.appendChild(downloadBtn);
+
+  /* -------- 4 · teardown -------- */
   const tearDown = () => {
-    dimmer.remove();
-    closer.remove();
-    downloader.remove();
+    [toolbar,dimmer,closeBtn,downloadBtn].forEach(el=>el.remove());
     document.body.classList.remove('no-scroll');
   };
+  closeBtn.onclick = tearDown;
+  document.addEventListener('keydown',e=>e.key==='Escape'&&tearDown(),{once:true});
 
-  /* 5 — Events */
-  closer.addEventListener('click', tearDown);
-  document.addEventListener('keydown',
-    (e)=>{ if (e.key === 'Escape') tearDown(); },
-    { once:true }
-  );
-
-  downloader.addEventListener('click', () => {
-    /* remember current inline styles */
-    const prev = { width: sheet.style.width,
-                  height: sheet.style.height,
-                  overflow: sheet.style.overflow };
-
-    /* 1 — make the node fully visible */
-    sheet.style.height   = sheet.scrollHeight + 'px';
+  /* -------- 5 · download logic (unchanged) -------- */
+  downloadBtn.onclick = () => {
+    const prev = {width:sheet.style.width,height:sheet.style.height,overflow:sheet.style.overflow};
+    sheet.style.height = sheet.scrollHeight + 'px';
     sheet.style.overflow = 'visible';
+    sheet.style.width   = '7.7in';
+    html2pdf().set({margin:0.4,filename:'Resume_Draft.pdf',
+                    image:{type:'jpeg',quality:0.98},
+                    html2canvas:{scale:2},
+                    jsPDF:{unit:'in',format:'letter',orientation:'portrait'}})
+              .from(sheet).save()
+              .then(()=>Object.assign(sheet.style,prev))
+              .catch(console.error);
+  };
 
-    /* 2 — shrink it to the printable width: 8.5 in − 2×0.4 in */
-    sheet.style.width = '7.7in';
+  /* -------- 6 · activate mini-docs commands -------- */
+  initDraftRichText(toolbar,editor);
+}
 
-    /* 3 — export */
-    html2pdf().set({
-        margin: 0.4,
-        filename: 'Resume_Draft.pdf',
-        image: { type:'jpeg', quality:0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      })
-      .from(sheet)
-      .save()
-      .then(() => {
-        /* 4 — restore everything exactly as it was */
-        Object.assign(sheet.style, prev);
-      })
-      .catch(console.error);
+
+//The google drive editing bar
+function initDraftRichText(toolbar, editor){
+
+  //const toolbar = document.getElementById('toolbar');
+  //const editor  = document.getElementById('draftEditor');
+
+  /* helper: execCommand font-size in px */
+  const applyFontSize = px=>{
+    document.execCommand('styleWithCSS',false,true);
+    document.execCommand('fontSize',false,7);
+    const el = document.querySelector('font[size="7"]');
+    if(el){ el.removeAttribute('size'); el.style.fontSize = px+'px'; }
+  };
+
+  /* click buttons */
+  toolbar.addEventListener('click',e=>{
+    const btn = e.target.closest('button');
+    if(!btn) return;
+
+    if(btn.id==='insertImage'){
+      document.getElementById('imageInput').click(); return;
+    }
+    if(btn.id==='createLink'){
+      const url = prompt('URL:','https://'); if(url) document.execCommand('createLink',false,url); return;
+    }
+    if(btn.id==='removeFormat'){ document.execCommand('removeFormat'); return; }
+
+    const cmd = btn.dataset.command;
+    if(cmd){ document.execCommand(cmd,false,null);
+             btn.classList.toggle('active',document.queryCommandState(cmd)); }
   });
 
+  /* dropdowns */
+  document.getElementById('style')
+          .addEventListener('change',e=>document.execCommand('formatBlock',false,e.target.value));
+  document.getElementById('fontName')
+          .addEventListener('change',e=>document.execCommand('fontName',false,e.target.value));
 
+  /* font size number & +/- */
+  const sizeInput = document.getElementById('fontSize');
+  document.getElementById('fontPlus').addEventListener('click',()=>bump(1));
+  document.getElementById('fontMinus').addEventListener('click',()=>bump(-1));
+  sizeInput.addEventListener('change',()=>applyFontSize(sizeInput.value));
+  const bump = d=>{
+    sizeInput.value = Math.max(8,Math.min(96,(+sizeInput.value||14)+d));
+    applyFontSize(sizeInput.value);
+  };
+
+  /* colours */
+  document.getElementById('foreColor')
+          .addEventListener('input',e=>document.execCommand('foreColor',false,e.target.value));
+  document.getElementById('hiliteColor')
+          .addEventListener('input',e=>document.execCommand('hiliteColor',false,e.target.value));
+
+  /* image picker */
+  document.getElementById('imageInput').addEventListener('change',e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>document.execCommand('insertImage',false,ev.target.result);
+    reader.readAsDataURL(file); e.target.value='';
+  });
+
+  /* keep button states fresh when selection changes */
+  ['keyup','mouseup'].forEach(evt=>
+    editor.addEventListener(evt,()=>{
+      toolbar.querySelectorAll('[data-command]').forEach(btn=>{
+        btn.classList.toggle('active',document.queryCommandState(btn.dataset.command));
+      });
+    })
+  );
 }
+
+
 
 
 

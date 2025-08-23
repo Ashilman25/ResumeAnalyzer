@@ -1,6 +1,11 @@
 const TESTING_MODE = false; 
 const SAMPLE_PDF_PATH = './sample_resume.pdf'; 
 
+// ✅ Choose API base automatically: use local when developing, else Hosting proxy
+const API_BASE = window.location.hostname.includes('localhost')
+  ? 'http://localhost:8080/api'   // when you run uvicorn locally
+  : '/api';                       // when deployed on Firebase Hosting
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const browseBtn = document.getElementById('browseBtn');
@@ -76,9 +81,11 @@ analyzeBtn.onclick = async () => {
   formData.append('targetIndustry', industry);
 
   try {
-    const res = await fetch('http://localhost:8000/analyze', { method: 'POST', body: formData });
-    if (!res.ok) throw new Error(await res.text());
-    const data = await res.json();
+    // ⬇️ CHANGED: go through Hosting rewrite
+    const res = await fetch(`${API_BASE}/analyze`, { method: 'POST', body: formData });
+    const txt = await res.text();
+    if (!res.ok) throw new Error(txt || 'Analyze failed');
+    const data = JSON.parse(txt);
     await renderResults(data, selectedFile);
   } catch (err) {
     alert("Error analyzing Resume. Try again.");
@@ -351,9 +358,8 @@ async function renderResults(data, originalFile) {
         fd.append('targetIndustry',
                   document.getElementById('industrySelect').value);
 
-        const res = await fetch('http://localhost:8000/draft', {
-          method: 'POST', body: fd
-        });
+        const res = await fetch(`${API_BASE}/draft`, { method: 'POST', body: fd });
+
         if (!res.ok) throw new Error(await res.text());
         const { html } = await res.json();
         showDraftOverlay(html);

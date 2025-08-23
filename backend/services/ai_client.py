@@ -1,11 +1,13 @@
+# backend/services/ai_client.py
 import os, json, re
+from importlib.resources import files as pkg_files
 from openai import OpenAI
 
+# Package-relative prompt loads
+SECTION_PROMPT = pkg_files("backend.prompts").joinpath("section_prompt.txt").read_text(encoding="utf-8")
+GLOBAL_PROMPT  = pkg_files("backend.prompts").joinpath("global_prompt.txt").read_text(encoding="utf-8")
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-
-SECTION_PROMPT = open("backend/prompts/section_prompt.txt").read()
-GLOBAL_PROMPT = open("backend/prompts/global_prompt.txt").read()
 
 def safe_json_loads(raw):
     m = re.search(r'\{.*\}', raw, re.S)

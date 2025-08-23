@@ -2,6 +2,8 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 import os, uuid, tempfile, asyncio
 from backend.services import pdf_extract, section_splitter, ai_client_async, ai_client
 
+# NOTE: In main.py you mount this router with prefix="/api"
+# so the final path becomes POST /api/draft
 router = APIRouter(prefix="/draft", tags=["draft"])
 
 @router.post("")

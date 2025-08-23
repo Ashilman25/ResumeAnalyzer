@@ -1,1 +1,20 @@
-{}
+{
+  "name": "resumeanalyzer",
+  "version": "1.0.0",
+  "description": "Resume Analysis web app",
+  "homepage": "https://github.com/Ashilman25/ResumeAnalyzer#readme",
+  "bugs": {
+    "url": "https://github.com/Ashilman25/ResumeAnalyzer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ashilman25/ResumeAnalyzer.git"
+  },
+  "license": "ISC",
+  "author": "AShilman",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

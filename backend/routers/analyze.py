@@ -6,9 +6,11 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 
 from backend.models.schemas import AnalysisResponse
 from backend.services import pdf_extract, section_splitter
-from backend.services import ai_client_async          # NEW async scorer
-from backend.services import ai_client               # existing sync global helper
+from backend.services import ai_client_async          # async section scorer
+from backend.services import ai_client               # sync overall feedback
 
+# NOTE: In main.py you mount this router with prefix="/api"
+# so the final path becomes POST /api/analyze
 router = APIRouter(prefix="/analyze", tags=["analyze"])
 
 # Tune this to stay under your account’s rate limits
@@ -66,4 +68,3 @@ async def analyze_resume(
         pass
 
     return AnalysisResponse(overall=overall, sections=section_results)
-

@@ -1,4 +1,4 @@
-# 🧠 ResumeAnalyzer (MVP)
+# 🧠 Resume Analyzer (MVP)
 
 An interactive web app that lets you **upload a resume (PDF)**,  
 get **AI-driven scores and feedback by section**, and instantly view an **improved draft** side-by-side.
@@ -43,7 +43,7 @@ get **AI-driven scores and feedback by section**, and instantly view an **improv
 ## 📌 What It’s For
 
 - **Job seekers**: get **immediate AI feedback** tailored to your industry
-- **Career centers**: offer an **interactive résumé workshop tool**
+- **Career centers**: offer an **interactive resume workshop tool**
 - **Developers & researchers**: explore how LLMs can augment document review in real-time
 
 This MVP demonstrates a **minimal but complete end-to-end pipeline**:  

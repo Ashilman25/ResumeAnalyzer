@@ -1,85 +1,52 @@
-# Resume AI MVP
+# 🧠 ResumeAnalyzer (MVP)
 
-A minimal, end-to-end prototype: upload a PDF resume, score each section with AI, and show an improved draft side-by-side.
-
-## Quick Start
-
-### 1. Backend (FastAPI)
-
-```bash
-cd backend
-python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r ../requirements.txt
-cp .env.example .env  # add your real OpenAI key
-uvicorn main:app --reload
-```
-
-### 2. Frontend (static)
-
-Serve the `frontend/` folder with any static server (VSCode Live Server, `python -m http.server`, etc.).
-
-```bash
-cd frontend
-python -m http.server 5500
-# open http://localhost:5500
-```
-
-### 3. Test the Flow
-
-1. Open the frontend in your browser.
-2. Drag/drop a PDF and select an industry.
-3. Click **Analyze** – you'll get stubbed or real AI JSON back (depending on your .env).
-
-## PDF.js Install Options
-
-- **Bundled build**: Place prebuilt `pdf.js` & `pdf.worker.js` in `frontend/vendor/pdfjs/` (already stubbed here).
-- **CDN**: See comments in `index.html`.
-- **npm**: `npm install pdfjs-dist` and import it.
-
-## Definition of Done (MVP)
-
-- Upload ➜ Analyze ➜ Scores & Improved text shown
-- Two-pane PDF viewer
-- Download “Improved v1”
-- Secrets in `.env`
-- README reproducible on macOS
-
-## Repo Structure
-
-```
-resume-ai-mvp/
-├─ backend/
-│  ├─ main.py
-│  ├─ routers/
-│  │  └─ analyze.py
-│  ├─ services/
-│  │  ├─ pdf_extract.py
-│  │  ├─ section_splitter.py
-│  │  └─ ai_client.py
-│  ├─ models/
-│  │  └─ schemas.py
-│  └─ prompts/
-│     ├─ section_prompt.txt
-│     └─ global_prompt.txt
-├─ frontend/
-│  ├─ index.html
-│  ├─ styles.css
-│  ├─ main.js
-│  ├─ pdfviewer.js
-│  └─ vendor/pdfjs/ (placeholder)
-├─ scripts/
-│  └─ cron_cleanup.sh
-├─ .env.example
-├─ requirements.txt
-├─ .gitignore
-└─ LICENSE
-```
-
-## License
-
-MIT (see LICENSE).
+An interactive web app that lets you **upload a resume (PDF)**,  
+get **AI-driven scores and feedback by section**, and instantly view an **improved draft** side-by-side.
 
 ---
 
-_Generated on 2025-07-25_
-# ResumeAnalyzer
+## 🚀 What You’ll See
+
+- **📄 Upload a PDF resume**
+- **🎯 Pick a target industry** from 50+ options
+- **🤖 Section-by-section scores** with strengths & improvements
+- **🪄 AI-generated rewrite suggestions**
+- **🪟 Two-pane viewer**: Original vs. Improved Draft
+- **⬇️ Export draft** as polished PDF
+
+---
+
+## 🏗 Tech Behind It
+
+### 🔹 Frontend
+- **Plain HTML/CSS/JS** (no heavy frameworks)
+- **PDF.js** for client-side PDF rendering
+- **Custom UI** with drag-and-drop, collapsible feedback cards, and live scoring badges
+- **html2pdf.js** for exporting improved drafts
+
+### 🔹 Backend
+- **FastAPI (Python)** REST API
+- **pdfminer.six** for text extraction
+- **Custom section splitter** for parsing resume headings
+- **OpenAI GPT-4o-mini** for:
+  - Per-section scoring & rewrite suggestions (async)
+  - Global resume summary & recommendations (sync)
+
+### 🔹 Hosting / Infra
+- **Firebase Hosting** → frontend static assets
+- **Google Cloud Run** → FastAPI backend (containerized)
+- **Cloudflare** → caching & edge delivery
+- **Environment secrets** via `.env` (API keys, model config)
+
+---
+
+## 📌 What It’s For
+
+- **Job seekers**: get **immediate AI feedback** tailored to your industry
+- **Career centers**: offer an **interactive résumé workshop tool**
+- **Developers & researchers**: explore how LLMs can augment document review in real-time
+
+This MVP demonstrates a **minimal but complete end-to-end pipeline**:  
+`Upload → Extract → Analyze → Render → Rewrite → Export`.
+
+---
